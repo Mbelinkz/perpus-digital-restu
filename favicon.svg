@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a8a" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde047" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="url(#bgGrad)" />
+  <rect x="6" y="6" width="116" height="116" rx="24" fill="none" stroke="url(#goldGrad)" stroke-width="3" opacity="0.6" />
+  <!-- Star -->
+  <polygon points="64,18 69,30 82,31 72,40 75,52 64,45 53,52 56,40 46,31 59,30" fill="url(#goldGrad)" />
+  <!-- Open Book -->
+  <path d="M26,56 Q45,48 64,58 Q83,48 102,56 L102,96 Q83,88 64,98 Q45,88 26,96 Z" fill="#ffffff" />
+  <path d="M24,96 Q45,88 64,98 Q83,88 104,96 L106,103 Q83,95 64,105 Q45,95 22,103 Z" fill="url(#goldGrad)" />
+  <line x1="64" y1="58" x2="64" y2="98" stroke="#cbd5e1" stroke-width="3" />
+  <line x1="35" y1="68" x2="55" y2="73" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" />
+  <line x1="35" y1="78" x2="55" y2="83" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" />
+  <line x1="93" y1="68" x2="73" y2="73" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" />
+  <line x1="93" y1="78" x2="73" y2="83" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" />
+</svg>
+

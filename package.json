@@ -1,0 +1,23 @@
+{
+  "name": "perpus-digital-sumber-ilmu-sdn1-rejoso",
+  "version": "1.0.0",
+  "description": "Aplikasi Perpustakaan Digital Sumber Ilmu - SD Negeri 1 Rejoso (Siap Deploy Hosting)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "keywords": [
+    "perpustakaan-digital",
+    "sdn-1-rejoso",
+    "sumber-ilmu",
+    "literasi-sekolah",
+    "ebook"
+  ],
+  "author": "Perpustakaan Sumber Ilmu SD Negeri 1 Rejoso",
+  "license": "MIT"
+}
+

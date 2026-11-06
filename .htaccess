@@ -1,0 +1,31 @@
+# Konfigurasi Server Apache / cPanel Shared Hosting
+# Perpustakaan Digital Sumber Ilmu - SD Negeri 1 Rejoso
+
+DirectoryIndex index.html perpustakaan_digital_sumber_ilmu_sdn_1_rejoso.html
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Arahkan endpoint /api/db ke api.php pada Shared Hosting
+    RewriteRule ^api/db/?$ api.php [L,QSA]
+</IfModule>
+
+# Header Keamanan & CORS
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# Kompresi GZIP agar loading cepat di HP Siswa
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/css application/javascript application/json image/svg+xml
+</IfModule>
+
+# Pastikan database.json tidak di-cache oleh browser
+<FilesMatch "database\.json$">
+    <IfModule mod_headers.c>
+        Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+    </IfModule>
+</FilesMatch>
+

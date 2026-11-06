@@ -1,0 +1,2668 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perpustakaan Digital Sumber Ilmu - SD Negeri 1 Rejoso</title>
+    <meta name="description" content="Portal Resmi Perpustakaan Digital Sumber Ilmu SD Negeri 1 Rejoso. Layanan peminjaman buku, E-Book interaktif, galeri karya siswa, dan pojok cerpen literasi sekolah.">
+    <meta name="keywords" content="Perpustakaan Digital, Sumber Ilmu, SD Negeri 1 Rejoso, SDN 1 Rejoso, E-Book SD, Literasi Sekolah, Nganjuk">
+    <meta name="author" content="SD Negeri 1 Rejoso">
+    <meta name="theme-color" content="#1e3a8a">
+
+    <!-- Open Graph / Social Sharing Meta -->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="id_ID">
+    <meta property="og:title" content="Perpustakaan Digital Sumber Ilmu - SD Negeri 1 Rejoso">
+    <meta property="og:description" content="Pinjam buku favoritmu, baca E-Book interaktif penuh warna, unggah hasil karya terbaik, dan tularkan bakat menulismu melalui Cerpen Siswa!">
+
+    <!-- Favicon & PWA Manifest -->
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+    <link rel="apple-touch-icon" href="./favicon.svg">
+    <link rel="manifest" href="./manifest.json">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Plus Jakarta Sans & Fredoka untuk kesan edukatif & elegan -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        display: ['"Fredoka"', 'sans-serif'],
+                    },
+                    colors: {
+                        navy: {
+                            50: '#f0f4ff',
+                            100: '#e0e9ff',
+                            500: '#1e3a8a',
+                            600: '#172554',
+                            700: '#0f172a',
+                            800: '#0b1120',
+                            900: '#070b14',
+                        },
+                        gold: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Animations for Library Theme */
+        @keyframes floatBook {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-14px) rotate(2deg); }
+        }
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-8px) scale(1.03); }
+        }
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.85; transform: scale(1.15); }
+        }
+        @keyframes pageTurn {
+            0%, 100% { transform: rotateY(0deg); }
+            50% { transform: rotateY(-25deg); }
+        }
+        .animate-float-book {
+            animation: floatBook 5s ease-in-out infinite;
+        }
+        .animate-float-slow {
+            animation: floatSlow 6s ease-in-out infinite;
+        }
+        .animate-glow {
+            animation: pulseGlow 3.5s ease-in-out infinite;
+        }
+        .book-page-anim {
+            transform-origin: left center;
+            animation: pageTurn 4s ease-in-out infinite;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Print Styles for Member Card & Reports */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printableArea, #printableArea * {
+                visibility: visible;
+            }
+            #printableArea {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                box-shadow: none !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-amber-400 selection:text-slate-900 min-h-screen flex flex-col">
+
+    <!-- NOTIFICATION TOAST -->
+    <div id="toastContainer" class="fixed top-5 right-5 z-[100] flex flex-col gap-3 max-w-sm w-full pointer-events-none"></div>
+
+    <!-- ========================================== -->
+    <!-- TOP NAVIGATION BAR                         -->
+    <!-- ========================================== -->
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            <!-- Brand & Logo -->
+            <div class="flex items-center gap-3.5 cursor-pointer" onclick="switchMainView('public')">
+                <div id="headerLogoWrapper" class="w-12 h-12 rounded-2xl bg-gradient-to-br from-navy-500 to-indigo-900 flex items-center justify-center text-amber-400 shadow-md shadow-indigo-950/20 border-2 border-amber-400/40 overflow-hidden shrink-0">
+                    <!-- Dynamic Logo rendered by JS -->
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-800 rounded-full border border-amber-300">Perpustakaan Digital</span>
+                        <span id="syncBadge" class="hidden sm:inline-flex items-center gap-1 text-[11px] font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span> DB Lokal Aktif
+                        </span>
+                    </div>
+                    <h1 id="headerLibName" class="font-display font-bold text-lg sm:text-xl text-slate-900 leading-tight">Perpustakaan Sumber Ilmu</h1>
+                    <p id="headerSchoolName" class="text-xs font-semibold text-indigo-900/70">SD Negeri 1 Rejoso</p>
+                </div>
+            </div>
+
+            <!-- Navigation Links (Public) -->
+            <nav id="publicNavLinks" class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
+                <a href="#beranda" class="hover:text-indigo-900 transition-colors">Beranda</a>
+                <a href="#statistik" class="hover:text-indigo-900 transition-colors">Grafik Keaktifan</a>
+                <a href="#koleksi" class="hover:text-indigo-900 transition-colors">Koleksi & E-Book</a>
+                <a href="#cerpen-publik" class="hover:text-indigo-900 transition-colors">Pojok Cerpen</a>
+            </nav>
+
+            <!-- Action Buttons / Active User Status -->
+            <div id="headerActions" class="flex items-center gap-2.5">
+                <!-- Rendered dynamically based on session state -->
+            </div>
+        </div>
+    </header>
+
+    <!-- ========================================== -->
+    <!-- VIEW 1: PUBLIC DASHBOARD                   -->
+    <!-- ========================================== -->
+    <main id="viewPublic" class="flex-1">
+        <!-- HERO SECTION WITH LIBRARY ANIMATIONS -->
+        <section id="beranda" class="relative overflow-hidden bg-gradient-to-br from-navy-800 via-navy-600 to-indigo-950 text-white pt-10 pb-16 lg:py-20">
+            <!-- Animated Decorative Background Particles -->
+            <div class="absolute inset-0 overflow-hidden pointer-events-none">
+                <div class="absolute -top-24 -left-24 w-96 h-96 bg-amber-400/10 rounded-full blur-3xl"></div>
+                <div class="absolute top-1/2 right-10 w-80 h-80 bg-blue-400/10 rounded-full blur-3xl"></div>
+                <!-- Floating Stars/Knowledge Sparkles -->
+                <i class="fa-solid fa-star text-amber-300/40 text-xl absolute top-12 left-[15%] animate-glow"></i>
+                <i class="fa-solid fa-sparkles text-amber-400/30 text-2xl absolute bottom-16 left-[45%] animate-glow" style="animation-delay: 1s;"></i>
+                <i class="fa-solid fa-book-open text-indigo-300/20 text-3xl absolute top-20 right-[42%] animate-float-slow"></i>
+                <i class="fa-solid fa-graduation-cap text-amber-300/20 text-4xl absolute bottom-10 right-[10%] animate-float-book"></i>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                    <!-- Hero Text Content -->
+                    <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-amber-300 text-xs sm:text-sm font-semibold">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            <span>Gerbang Literasi & Kreasi Siswa SD Negeri 1 Rejoso</span>
+                        </div>
+                        
+                        <h2 class="font-display text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
+                            Jelajahi Samudra Ilmu di <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400">Sumber Ilmu</span>
+                        </h2>
+                        
+                        <p class="text-slate-200 text-base sm:text-lg max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal">
+                            Selamat datang di Perpustakaan Digital <strong>SD Negeri 1 Rejoso</strong>. Pinjam buku favoritmu, baca E-Book interaktif penuh warna, unggah hasil karya terbaik, dan tularkan bakat menulismu melalui Cerpen Siswa!
+                        </p>
+
+                        <!-- Quick CTA Login Buttons -->
+                        <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+                            <button onclick="openLoginModal('student')" class="group relative inline-flex items-center gap-3 px-6 py-4 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-bold text-sm sm:text-base shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 hover:-translate-y-0.5 transition-all">
+                                <i class="fa-solid fa-user-graduate text-lg group-hover:scale-110 transition-transform"></i>
+                                <span>Masuk Portal Siswa (NISN)</span>
+                                <i class="fa-solid fa-arrow-right text-xs opacity-75"></i>
+                            </button>
+                            <button onclick="openLoginModal('admin')" class="inline-flex items-center gap-2.5 px-6 py-4 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-semibold text-sm sm:text-base border border-white/20 backdrop-blur-sm transition-all">
+                                <i class="fa-solid fa-user-shield text-amber-300"></i>
+                                <span>Login Admin Perpustakaan</span>
+                            </button>
+                        </div>
+
+                        <!-- Quick Info Bar -->
+                        <div class="pt-4 grid grid-cols-3 gap-3 max-w-lg mx-auto lg:mx-0 border-t border-white/10 text-left">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-9 h-9 rounded-xl bg-amber-400/20 flex items-center justify-center text-amber-300 shrink-0">
+                                    <i class="fa-solid fa-id-card"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-300">Akses Mudah</p>
+                                    <p class="text-xs font-bold text-white">Login dengan NISN</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-9 h-9 rounded-xl bg-sky-400/20 flex items-center justify-center text-sky-300 shrink-0">
+                                    <i class="fa-solid fa-tablet-screen-button"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-300">E-Book Interaktif</p>
+                                    <p class="text-xs font-bold text-white">Baca Kapan Saja</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-9 h-9 rounded-xl bg-emerald-400/20 flex items-center justify-center text-emerald-300 shrink-0">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-slate-300">Database Aman</p>
+                                    <p class="text-xs font-bold text-white">Lokal & Google Drive</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Animated Library SVG Illustration -->
+                    <div class="lg:col-span-5 flex justify-center">
+                        <div class="relative w-full max-w-md aspect-square flex items-center justify-center">
+                            <!-- Glowing Backdrop Circle -->
+                            <div class="absolute inset-6 rounded-full bg-gradient-to-tr from-amber-400/20 via-indigo-400/15 to-sky-400/20 blur-xl animate-glow"></div>
+                            
+                            <!-- Main Animated SVG Scene -->
+                            <svg viewBox="0 0 400 400" class="w-full h-full drop-shadow-2xl relative z-10">
+                                <defs>
+                                    <linearGradient id="bookCoverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#f59e0b" />
+                                        <stop offset="100%" stop-color="#b45309" />
+                                    </linearGradient>
+                                    <linearGradient id="magicRay" x1="50%" y1="100%" x2="50%" y2="0%">
+                                        <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.45" />
+                                        <stop offset="100%" stop-color="#38bdf8" stop-opacity="0" />
+                                    </linearGradient>
+                                </defs>
+
+                                <!-- Magic Light Beam from Open Book -->
+                                <polygon points="100,260 300,260 360,60 40,60" fill="url(#magicRay)" class="animate-pulse" />
+
+                                <!-- Floating Knowledge Icons Group -->
+                                <g class="animate-float-book">
+                                    <!-- Floating Mini Book 1 -->
+                                    <g transform="translate(75, 95) rotate(-12)">
+                                        <rect x="0" y="0" width="56" height="42" rx="6" fill="#38bdf8" />
+                                        <rect x="6" y="5" width="46" height="32" rx="3" fill="#f8fafc" />
+                                        <line x1="14" y1="14" x2="42" y2="14" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/>
+                                        <line x1="14" y1="22" x2="36" y2="22" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/>
+                                    </g>
+
+                                    <!-- Floating Planet / Science Orb -->
+                                    <g transform="translate(275, 85)">
+                                        <circle cx="25" cy="25" r="20" fill="#a855f7" />
+                                        <ellipse cx="25" cy="25" rx="34" ry="8" fill="none" stroke="#fde047" stroke-width="3" transform="rotate(-20 25 25)" />
+                                    </g>
+
+                                    <!-- Floating Star Badge -->
+                                    <g transform="translate(180, 50)">
+                                        <circle cx="22" cy="22" r="22" fill="#fbbf24" opacity="0.25" />
+                                        <polygon points="22,6 27,16 38,17 30,25 32,36 22,30 12,36 14,25 6,17 17,16" fill="#fde047" />
+                                    </g>
+                                </g>
+
+                                <!-- Floating Pen & Idea Bulb -->
+                                <g class="animate-float-slow" style="animation-delay: 1.2s;">
+                                    <circle cx="115" cy="185" r="18" fill="#34d399" opacity="0.9"/>
+                                    <text x="115" y="191" text-anchor="middle" fill="#064e3b" font-size="16" font-weight="bold">A+</text>
+                                    
+                                    <circle cx="290" cy="175" r="20" fill="#f43f5e" opacity="0.9"/>
+                                    <path d="M284,175 L296,175 M290,169 L290,181" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+                                </g>
+
+                                <!-- Stack of Books Base -->
+                                <g transform="translate(70, 275)">
+                                    <!-- Bottom Book -->
+                                    <rect x="10" y="38" width="240" height="28" rx="8" fill="#1e40af" />
+                                    <rect x="20" y="43" width="220" height="18" rx="4" fill="#f1f5f9" />
+                                    <rect x="55" y="38" width="16" height="28" fill="#f59e0b" />
+                                    <!-- Middle Book -->
+                                    <rect x="25" y="12" width="210" height="26" rx="7" fill="#0d9488" />
+                                    <rect x="35" y="17" width="190" height="16" rx="4" fill="#f8fafc" />
+                                    <rect x="180" y="12" width="14" height="26" fill="#fbbf24" />
+                                </g>
+
+                                <!-- Main Open Magic Book -->
+                                <g transform="translate(200, 265)" class="animate-float-slow">
+                                    <!-- Book Cover Back -->
+                                    <path d="M-130,10 Q-65,-5 0,15 Q65,-5 130,10 L135,24 Q65,8 0,28 Q-65,8 -135,24 Z" fill="url(#bookCoverGrad)" />
+                                    <!-- Left Page -->
+                                    <path d="M-125,6 Q-60,-18 0,12 L0,-45 Q-60,-75 -120,-48 Z" fill="#ffffff" stroke="#e2e8f0" stroke-width="2" />
+                                    <!-- Right Page -->
+                                    <path d="M125,6 Q60,-18 0,12 L0,-45 Q60,-75 120,-48 Z" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2" />
+                                    <!-- Animated Turning Page -->
+                                    <path d="M115,-2 Q55,-28 0,12 L0,-45 Q55,-82 110,-55 Z" fill="#fffbeb" stroke="#fde68a" stroke-width="1.5" class="book-page-anim" />
+                                    <!-- Text lines on Left Page -->
+                                    <line x1="-95" y1="-35" x2="-25" y2="-22" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" />
+                                    <line x1="-95" y1="-22" x2="-35" y2="-11" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" />
+                                    <line x1="-95" y1="-9" x2="-45" y2="0" stroke="#fbbf24" stroke-width="3" stroke-linecap="round" />
+                                    <!-- Center Spine -->
+                                    <line x1="0" y1="-45" x2="0" y2="26" stroke="#d97706" stroke-width="4" stroke-linecap="round" />
+                                </g>
+
+                                <!-- Banner Ribbon -->
+                                <g transform="translate(80, 345)">
+                                    <rect x="0" y="0" width="240" height="36" rx="18" fill="#fbbf24" />
+                                    <text x="120" y="23" text-anchor="middle" fill="#0f172a" font-family="Fredoka, sans-serif" font-size="14" font-weight="700">SUMBER ILMU • SDN 1 REJOSO</text>
+                                </g>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SUMMARY STATS CARDS -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                <div class="bg-white rounded-2xl p-5 shadow-lg shadow-slate-200/60 border border-slate-100 flex items-center gap-4 hover:-translate-y-1 transition-transform">
+                    <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-700 flex items-center justify-center text-2xl shrink-0">
+                        <i class="fa-solid fa-book"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Koleksi Buku Fisik</p>
+                        <h3 id="statTotalPhysical" class="font-display text-2xl sm:text-3xl font-bold text-slate-900">0</h3>
+                        <p class="text-xs text-emerald-600 font-medium">Siap dipinjam siswa</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-5 shadow-lg shadow-slate-200/60 border border-slate-100 flex items-center gap-4 hover:-translate-y-1 transition-transform">
+                    <div class="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-2xl shrink-0">
+                        <i class="fa-solid fa-tablet-screen-button"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Buku Digital (E-Book)</p>
+                        <h3 id="statTotalEbooks" class="font-display text-2xl sm:text-3xl font-bold text-slate-900">0</h3>
+                        <p class="text-xs text-amber-600 font-medium">Baca langsung online</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-5 shadow-lg shadow-slate-200/60 border border-slate-100 flex items-center gap-4 hover:-translate-y-1 transition-transform">
+                    <div class="w-14 h-14 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center text-2xl shrink-0">
+                        <i class="fa-solid fa-users-viewfinder"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Kunjungan Siswa</p>
+                        <h3 id="statTotalVisits" class="font-display text-2xl sm:text-3xl font-bold text-slate-900">0</h3>
+                        <p class="text-xs text-sky-600 font-medium">Siswa aktif berkunjung</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-5 shadow-lg shadow-slate-200/60 border border-slate-100 flex items-center gap-4 hover:-translate-y-1 transition-transform">
+                    <div class="w-14 h-14 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center text-2xl shrink-0">
+                        <i class="fa-solid fa-feather-pointed"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Karya & Cerpen Siswa</p>
+                        <h3 id="statTotalCreations" class="font-display text-2xl sm:text-3xl font-bold text-slate-900">0</h3>
+                        <p class="text-xs text-rose-600 font-medium">Bakat literasi siswa</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LIBRARY ACTIVITY PROGRESS CHARTS -->
+        <section id="statistik" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full">Analitik Real-Time</span>
+                    <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900 mt-2">Grafik Progress Keaktifan Perpustakaan Digital</h2>
+                    <p class="text-sm text-slate-500 mt-1">Visualisasi tingkat kunjungan siswa, sirkulasi peminjaman buku, dan minat baca di SD Negeri 1 Rejoso.</p>
+                </div>
+                <div class="flex items-center gap-2 text-xs font-semibold text-slate-600 bg-white px-4 py-2.5 rounded-xl shadow-sm border border-slate-200">
+                    <i class="fa-solid fa-chart-line text-amber-500"></i>
+                    <span>Terintegrasi dengan aktivitas Login & Peminjaman Siswa</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Line/Bar Combo Chart: Monthly Progress -->
+                <div class="lg:col-span-8 bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="font-bold text-slate-800 text-base">Tren Kunjungan, Peminjaman & Karya Siswa</h3>
+                            <p class="text-xs text-slate-400">Data progres keaktifan bulanan tahun ajaran berjalan</p>
+                        </div>
+                        <span class="px-2.5 py-1 text-xs font-bold bg-emerald-50 text-emerald-700 rounded-lg border border-emerald-200">
+                            <i class="fa-solid fa-arrow-trend-up mr-1"></i> +24% Bulan Ini
+                        </span>
+                    </div>
+                    <div class="relative h-72 w-full">
+                        <canvas id="activityProgressChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Doughnut Chart: Popular Categories -->
+                <div class="lg:col-span-4 bg-white rounded-3xl p-6 shadow-sm border border-slate-200/80 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-base">Distribusi Minat Kategori Buku</h3>
+                        <p class="text-xs text-slate-400 mb-4">Kategori bacaan paling digemari siswa</p>
+                    </div>
+                    <div class="relative h-56 w-full flex items-center justify-center">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                        <span>Kategori Terfavorit:</span>
+                        <span class="font-bold text-indigo-900">Dongeng & Sains Anak</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PUBLIC BOOK & EBOOK SHOWCASE -->
+        <section id="koleksi" class="bg-white py-14 border-y border-slate-200/70">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-widest text-amber-700 bg-amber-100 px-3 py-1 rounded-full">Katalog Unggulan</span>
+                        <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900 mt-2">Koleksi Buku & E-Book Pilihan</h2>
+                        <p class="text-sm text-slate-500 mt-1">Login sebagai siswa menggunakan NISN untuk meminjam buku fisik atau membaca E-Book penuh.</p>
+                    </div>
+                    <button onclick="openLoginModal('student')" class="self-start sm:self-auto px-5 py-2.5 rounded-xl bg-navy-600 hover:bg-navy-700 text-white font-semibold text-sm transition-colors flex items-center gap-2">
+                        <i class="fa-solid fa-right-to-bracket"></i> Login Siswa untuk Akses Penuh
+                    </button>
+                </div>
+
+                <div id="publicBookGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- PUBLIC STUDENT STORIES & CREATIONS PREVIEW -->
+        <section id="cerpen-publik" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-widest text-rose-700 bg-rose-100 px-3 py-1 rounded-full">Bakat Literasi Muda</span>
+                    <h2 class="font-display text-2xl sm:text-3xl font-bold text-slate-900 mt-2">Pojok Cerpen & Karya Siswa SDN 1 Rejoso</h2>
+                    <p class="text-sm text-slate-500 mt-1">Apresiasi karya tulis cerita pendek dan kreativitas terbaik dari siswa-siswi kita.</p>
+                </div>
+                <button onclick="openLoginModal('student')" class="self-start sm:self-auto px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-sm transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-pen-nib"></i> Tulis Cerpenmu Sekarang
+                </button>
+            </div>
+
+            <div id="publicStoriesGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Populated via JS -->
+            </div>
+        </section>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- VIEW 2: STUDENT DASHBOARD (AFTER LOGIN)    -->
+    <!-- ========================================== -->
+    <main id="viewStudent" class="hidden flex-1 bg-slate-50 pb-16">
+        <!-- Student Welcome Banner -->
+        <div class="bg-gradient-to-r from-navy-700 via-indigo-900 to-navy-800 text-white py-8 border-b border-indigo-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-16 h-16 rounded-2xl bg-amber-400 text-slate-950 font-display font-bold text-2xl flex items-center justify-center shadow-lg border-2 border-white">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-400/20 text-emerald-300 border border-emerald-400/30">Portal Siswa Aktif</span>
+                            <span id="studentBannerClass" class="text-xs font-semibold text-amber-300">Kelas -</span>
+                        </div>
+                        <h2 id="studentBannerName" class="font-display text-2xl sm:text-3xl font-bold mt-0.5">Selamat Datang, Siswa!</h2>
+                        <p id="studentBannerNisn" class="text-xs text-slate-300">NISN: - • Tercatat otomatis dalam daftar kunjungan hari ini</p>
+                    </div>
+                </div>
+
+                <!-- Student Navigation Pills -->
+                <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                    <button onclick="switchStudentTab('pinjam')" id="stuTabBtn-pinjam" class="stu-tab-btn px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition-all bg-amber-400 text-slate-950 shadow-md">
+                        <i class="fa-solid fa-book-bookmark"></i> Peminjaman & Pengembalian
+                    </button>
+                    <button onclick="switchStudentTab('ebook')" id="stuTabBtn-ebook" class="stu-tab-btn px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition-all bg-white/10 text-white hover:bg-white/20">
+                        <i class="fa-solid fa-tablet-screen-button"></i> Baca E-Book Digital
+                    </button>
+                    <button onclick="switchStudentTab('karya')" id="stuTabBtn-karya" class="stu-tab-btn px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition-all bg-white/10 text-white hover:bg-white/20">
+                        <i class="fa-solid fa-palette"></i> Upload Karya Siswa
+                    </button>
+                    <button onclick="switchStudentTab('cerpen')" id="stuTabBtn-cerpen" class="stu-tab-btn px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition-all bg-white/10 text-white hover:bg-white/20">
+                        <i class="fa-solid fa-feather-pointed"></i> Cerpen Siswa
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+            <!-- STUDENT TAB 1: PEMINJAMAN & PENGEMBALIAN BUKU -->
+            <div id="stuTab-pinjam" class="space-y-8">
+                <!-- Active Borrowed Books by this Student -->
+                <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold">
+                                <i class="fa-solid fa-clock-rotate-left"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-display font-bold text-lg text-slate-900">Buku yang Sedang Kamu Pinjam</h3>
+                                <p class="text-xs text-slate-500">Klik tombol "Kembalikan Buku" jika kamu sudah selesai membaca buku fisik tersebut.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="studentActiveLoansList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+
+                <!-- Catalog to Borrow -->
+                <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                        <div>
+                            <h3 class="font-display font-bold text-xl text-slate-900">Katalog Peminjaman Buku Perpustakaan</h3>
+                            <p class="text-xs text-slate-500">Pilih buku yang ingin kamu pinjam dan tentukan durasi peminjaman.</p>
+                        </div>
+                        <div class="relative w-full sm:w-72">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-sm"></i>
+                            <input type="text" id="studentSearchBook" oninput="renderStudentBorrowCatalog()" placeholder="Cari judul atau penulis buku..." class="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600">
+                        </div>
+                    </div>
+                    <div id="studentBorrowCatalogGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- STUDENT TAB 2: BACA BUKU DIGITAL (E-BOOK) -->
+            <div id="stuTab-ebook" class="hidden space-y-6">
+                <div class="bg-gradient-to-r from-amber-50 to-indigo-50 rounded-3xl p-6 border border-amber-200/70 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="space-y-1">
+                        <span class="text-xs font-bold uppercase text-amber-700">Ruang Baca Digital Interaktif</span>
+                        <h3 class="font-display text-2xl font-bold text-slate-900">Koleksi E-Book SD Negeri 1 Rejoso</h3>
+                        <p class="text-sm text-slate-600">Baca buku cerita, ensiklopedia sains, dan materi pelajaran langsung dari layar perangkatmu halaman demi halaman!</p>
+                    </div>
+                    <div class="w-14 h-14 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center text-2xl font-bold shrink-0 shadow">
+                        <i class="fa-solid fa-book-open-reader"></i>
+                    </div>
+                </div>
+
+                <div id="studentEbookGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+
+            <!-- STUDENT TAB 3: UPLOAD HASIL KARYA SISWA -->
+            <div id="stuTab-karya" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Upload Form -->
+                <div class="lg:col-span-5 bg-white rounded-3xl p-6 shadow-sm border border-slate-200 h-fit">
+                    <div class="flex items-center gap-3 mb-5">
+                        <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-bold text-lg text-slate-900">Unggah Hasil Karya Siswa</h3>
+                            <p class="text-xs text-slate-500">Pamerkan lukisan, puisi, pantun, atau prakarya terbaikmu!</p>
+                        </div>
+                    </div>
+
+                    <form onsubmit="handleUploadWork(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Judul Karya</label>
+                            <input type="text" id="workTitle" required placeholder="Contoh: Lukisan Pemandangan Desa Rejoso" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Kategori Karya</label>
+                            <select id="workCategory" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none">
+                                <option value="Gambar & Lukisan">Gambar & Lukisan</option>
+                                <option value="Puisi & Pantun">Puisi & Pantun</option>
+                                <option value="Prakarya Kreatif">Prakarya Kreatif</option>
+                                <option value="Kaligrafi & Poster">Kaligrafi & Poster</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Deskripsi / Isi Puisi / Cerita Karya</label>
+                            <textarea id="workDesc" rows="4" required placeholder="Tuliskan penjelasan karyamu atau bait puisimu di sini..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Foto / Gambar Karya (Opsional)</label>
+                            <input type="file" id="workImageInput" accept="image/*" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                        </div>
+                        <button type="submit" class="w-full py-3 rounded-xl bg-navy-600 hover:bg-navy-700 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i> Publikasikan Karya Saya
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Works Gallery -->
+                <div class="lg:col-span-7 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-display font-bold text-xl text-slate-900">Galeri Karya Siswa SD Negeri 1 Rejoso</h3>
+                        <span id="worksCountBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-indigo-100 text-indigo-800">0 Karya</span>
+                    </div>
+                    <div id="studentWorksGallery" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- STUDENT TAB 4: CERPEN SISWA (MENULARKAN BAKAT MENULIS) -->
+            <div id="stuTab-cerpen" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Story Editor -->
+                <div class="lg:col-span-5 bg-white rounded-3xl p-6 shadow-sm border border-slate-200 h-fit">
+                    <div class="flex items-center gap-3 mb-5">
+                        <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center">
+                            <i class="fa-solid fa-pen-fancy"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-display font-bold text-lg text-slate-900">Tulis Cerpen Inspiratifmu</h3>
+                            <p class="text-xs text-slate-500">Tularkan bakat menulismu kepada seluruh teman di sekolah!</p>
+                        </div>
+                    </div>
+
+                    <form onsubmit="handleCreateStory(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Judul Cerpen</label>
+                            <input type="text" id="storyTitle" required placeholder="Contoh: Petualangan di Hutan Bambu Rejoso" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-rose-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Tema Cerita</label>
+                            <select id="storyTheme" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-rose-500 focus:outline-none">
+                                <option value="Persahabatan & Budi Pekerti">Persahabatan & Budi Pekerti</option>
+                                <option value="Petualangan & Imajinasi">Petualangan & Imajinasi</option>
+                                <option value="Cinta Lingkungan & Alam">Cinta Lingkungan & Alam</option>
+                                <option value="Cita-citaku">Cita-citaku</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Isi Cerpen</label>
+                            <textarea id="storyContent" rows="7" required placeholder="Mulai tuliskan cerita pendekmu yang seru dan penuh pesan moral di sini..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-rose-500 focus:outline-none leading-relaxed"></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-feather-pointed"></i> Terbitkan Cerpen Siswa
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Story List -->
+                <div class="lg:col-span-7 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-display font-bold text-xl text-slate-900">Kumpulan Cerpen Karya Siswa</h3>
+                        <span class="text-xs text-slate-500">Klik "Baca Cerpen" untuk membaca penuh & memberi bintang</span>
+                    </div>
+                    <div id="studentStoriesList" class="space-y-4">
+                        <!-- Rendered by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- VIEW 3: ADMIN DASHBOARD (AFTER LOGIN)      -->
+    <!-- ========================================== -->
+    <main id="viewAdmin" class="hidden flex-1 bg-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- ADMIN SIDEBAR NAVIGATION -->
+                <aside class="lg:col-span-3 space-y-4">
+                    <div class="bg-navy-800 text-white rounded-3xl p-5 shadow-md">
+                        <div class="flex items-center gap-3 pb-4 border-b border-white/10">
+                            <div class="w-11 h-11 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center font-bold text-lg">
+                                <i class="fa-solid fa-user-shield"></i>
+                            </div>
+                            <div>
+                                <span class="text-[10px] font-bold uppercase tracking-wider text-amber-300">Administrator</span>
+                                <h3 class="font-display font-bold text-base leading-tight">Panel Pustakawan</h3>
+                                <p class="text-xs text-slate-300">SD Negeri 1 Rejoso</p>
+                            </div>
+                        </div>
+
+                        <nav class="mt-4 space-y-1.5">
+                            <button onclick="switchAdminTab('sirkulasi')" id="admTabBtn-sirkulasi" class="adm-tab-btn w-full text-left px-4 py-3 rounded-xl font-semibold text-xs sm:text-sm flex items-center gap-3 transition-all bg-amber-400 text-slate-950">
+                                <i class="fa-solid fa-right-left w-4 text-center"></i>
+                                <span>Daftar Peminjam & Kembali</span>
+                            </button>
+                            <button onclick="switchAdminTab('rekap')" id="admTabBtn-rekap" class="adm-tab-btn w-full text-left px-4 py-3 rounded-xl font-semibold text-xs sm:text-sm flex items-center gap-3 transition-all text-slate-200 hover:bg-white/10">
+                                <i class="fa-solid fa-file-invoice w-4 text-center"></i>
+                                <span>Rekap Peminjam & Kembali</span>
+                            </button>
+                            <button onclick="switchAdminTab('kunjungan')" id="admTabBtn-kunjungan" class="adm-tab-btn w-full text-left px-4 py-3 rounded-xl font-semibold text-xs sm:text-sm flex items-center gap-3 transition-all text-slate-200 hover:bg-white/10">
+                                <i class="fa-solid fa-clipboard-user w-4 text-center"></i>
+                                <span>Daftar Kunjungan Siswa</span>
+                            </button>
+                            <button onclick="switchAdminTab('kartu')" id="admTabBtn-kartu" class="adm-tab-btn w-full text-left px-4 py-3 rounded-xl font-semibold text-xs sm:text-sm flex items-center gap-3 transition-all text-slate-200 hover:bg-white/10">
+                                <i class="fa-solid fa-id-card-clip w-4 text-center"></i>
+                                <span>Cetak Kartu Anggota</span>
+                            </button>
+                            <button onclick="switchAdminTab('pengaturan')" id="admTabBtn-pengaturan" class="adm-tab-btn w-full text-left px-4 py-3 rounded-xl font-semibold text-xs sm:text-sm flex items-center gap-3 transition-all text-slate-200 hover:bg-white/10">
+                                <i class="fa-solid fa-sliders w-4 text-center"></i>
+                                <span>Pengaturan & Database</span>
+                            </button>
+                        </nav>
+                    </div>
+
+                    <!-- Quick Database Backup Card -->
+                    <div class="bg-white rounded-3xl p-5 shadow-sm border border-slate-200 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-700 uppercase">Status Penyimpanan</span>
+                            <span class="px-2 py-0.5 text-[10px] font-bold bg-emerald-100 text-emerald-700 rounded-full">Tersinkron</span>
+                        </div>
+                        <p class="text-xs text-slate-500 leading-relaxed">Seluruh data tersimpan dalam 1 Database Lokal terpadu dan siap di-backup ke komputer / Google Drive.</p>
+                        <button onclick="exportDatabaseJSON()" class="w-full py-2.5 px-3 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs flex items-center justify-center gap-2 transition-colors">
+                            <i class="fa-solid fa-download"></i> Unduh Backup Database (.JSON)
+                        </button>
+                    </div>
+                </aside>
+
+                <!-- ADMIN MAIN CONTENT AREA -->
+                <div class="lg:col-span-9 space-y-6">
+
+                    <!-- ADMIN TAB 1: DAFTAR PEMINJAM & PENGEMBALIAN BUKU -->
+                    <section id="admTab-sirkulasi" class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 space-y-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                            <div>
+                                <h2 class="font-display font-bold text-xl text-slate-900">Daftar Peminjam & Pengembalian Buku</h2>
+                                <p class="text-xs text-slate-500">Kelola transaksi peminjaman buku aktif dan konfirmasi pengembalian buku siswa.</p>
+                            </div>
+                            <button onclick="toggleManualLoanForm()" class="px-4 py-2.5 rounded-xl bg-navy-600 hover:bg-navy-700 text-white font-bold text-xs flex items-center gap-2 self-start">
+                                <i class="fa-solid fa-plus"></i> Input Peminjaman Baru
+                            </button>
+                        </div>
+
+                        <!-- Collapsible Manual Loan Form -->
+                        <form id="adminManualLoanForm" onsubmit="handleAdminCreateLoan(event)" class="hidden bg-slate-50 p-4 rounded-2xl border border-slate-200 grid grid-cols-1 sm:grid-cols-4 gap-3 items-end">
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Pilih Siswa (NISN)</label>
+                                <select id="admLoanStudent" required class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white"></select>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Pilih Buku Fisik</label>
+                                <select id="admLoanBook" required class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white"></select>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">Durasi Pinjam</label>
+                                <select id="admLoanDays" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white">
+                                    <option value="3">3 Hari</option>
+                                    <option value="7" selected>7 Hari (1 Minggu)</option>
+                                    <option value="14">14 Hari (2 Minggu)</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="py-2 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs h-[36px]">
+                                Simpan Transaksi
+                            </button>
+                        </form>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="border-b border-slate-200 text-[11px] font-bold uppercase text-slate-400">
+                                        <th class="py-3 px-3">Siswa & NISN</th>
+                                        <th class="py-3 px-3">Judul Buku</th>
+                                        <th class="py-3 px-3">Tgl Pinjam</th>
+                                        <th class="py-3 px-3">Jatuh Tempo</th>
+                                        <th class="py-3 px-3">Status</th>
+                                        <th class="py-3 px-3 text-right">Aksi Admin</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminActiveLoansTable" class="divide-y divide-slate-100 text-xs sm:text-sm">
+                                    <!-- Populated via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- ADMIN TAB 2: DAFTAR REKAP PEMINJAM & PENGEMBALIAN BUKU -->
+                    <section id="admTab-rekap" class="hidden bg-white rounded-3xl p-6 shadow-sm border border-slate-200 space-y-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                            <div>
+                                <h2 class="font-display font-bold text-xl text-slate-900">Daftar Rekap Peminjam & Pengembalian Buku</h2>
+                                <p class="text-xs text-slate-500">Laporan lengkap sirkulasi peminjaman dan pengembalian buku Perpustakaan Sumber Ilmu.</p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <select id="rekapFilterStatus" onchange="renderAdminRekap()" class="px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold bg-slate-50">
+                                    <option value="ALL">Semua Status</option>
+                                    <option value="Dipinjam">Masih Dipinjam</option>
+                                    <option value="Dikembalikan">Sudah Dikembalikan</option>
+                                </select>
+                                <button onclick="exportRekapCSV()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5">
+                                    <i class="fa-solid fa-file-csv"></i> Export CSV
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Rekap Summary Pills -->
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
+                                <p class="text-xs text-slate-500">Total Transaksi</p>
+                                <p id="rekapTotalCount" class="font-display text-2xl font-bold text-slate-900">0</p>
+                            </div>
+                            <div class="p-4 rounded-2xl bg-amber-50 border border-amber-200/80">
+                                <p class="text-xs text-amber-700">Sedang Dipinjam</p>
+                                <p id="rekapActiveCount" class="font-display text-2xl font-bold text-amber-800">0</p>
+                            </div>
+                            <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200/80">
+                                <p class="text-xs text-emerald-700">Telah Dikembalikan</p>
+                                <p id="rekapReturnedCount" class="font-display text-2xl font-bold text-emerald-800">0</p>
+                            </div>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="border-b border-slate-200 text-[11px] font-bold uppercase text-slate-400">
+                                        <th class="py-3 px-3">ID</th>
+                                        <th class="py-3 px-3">Nama Siswa (Kelas)</th>
+                                        <th class="py-3 px-3">Buku</th>
+                                        <th class="py-3 px-3">Tgl Pinjam</th>
+                                        <th class="py-3 px-3">Tgl Kembali</th>
+                                        <th class="py-3 px-3">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminRekapTable" class="divide-y divide-slate-100 text-xs sm:text-sm">
+                                    <!-- Populated via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- ADMIN TAB 3: DAFTAR KUNJUNGAN SISWA -->
+                    <section id="admTab-kunjungan" class="hidden bg-white rounded-3xl p-6 shadow-sm border border-slate-200 space-y-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                            <div>
+                                <h2 class="font-display font-bold text-xl text-slate-900">Daftar Kunjungan Siswa</h2>
+                                <p class="text-xs text-slate-500">Presensi kehadiran otomatis saat siswa login maupun input kunjungan fisik di perpustakaan.</p>
+                            </div>
+                        </div>
+
+                        <!-- Quick Visit Input Form -->
+                        <form onsubmit="handleAdminAddVisit(event)" class="bg-indigo-50/70 p-4 rounded-2xl border border-indigo-100 grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
+                            <div>
+                                <label class="block text-[11px] font-bold text-indigo-900 uppercase mb-1">Pilih Siswa / NISN</label>
+                                <select id="admVisitStudent" required class="w-full px-3 py-2 rounded-xl border border-indigo-200 text-xs bg-white"></select>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-indigo-900 uppercase mb-1">Keperluan Kunjungan</label>
+                                <input type="text" id="admVisitPurpose" required placeholder="Membaca Buku / Pinjam Buku / Diskusi" value="Membaca & Meminjam Buku" class="w-full px-3 py-2 rounded-xl border border-indigo-200 text-xs bg-white">
+                            </div>
+                            <button type="submit" class="py-2 px-4 rounded-xl bg-indigo-700 hover:bg-indigo-800 text-white font-bold text-xs h-[36px] flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-user-check"></i> Catat Kunjungan
+                            </button>
+                        </form>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="border-b border-slate-200 text-[11px] font-bold uppercase text-slate-400">
+                                        <th class="py-3 px-3">Waktu Kunjungan</th>
+                                        <th class="py-3 px-3">NISN</th>
+                                        <th class="py-3 px-3">Nama Siswa</th>
+                                        <th class="py-3 px-3">Kelas</th>
+                                        <th class="py-3 px-3">Keperluan / Aktivitas</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminVisitsTable" class="divide-y divide-slate-100 text-xs sm:text-sm">
+                                    <!-- Populated via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- ADMIN TAB 4: CETAK KARTU ANGGOTA PERPUSTAKAAN -->
+                    <section id="admTab-kartu" class="hidden space-y-6">
+                        <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 space-y-6">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                                <div>
+                                    <h2 class="font-display font-bold text-xl text-slate-900">Cetak Kartu Anggota Perpustakaan</h2>
+                                    <p class="text-xs text-slate-500">Kelola data anggota siswa (NISN) dan cetak Kartu Anggota Perpustakaan Sumber Ilmu.</p>
+                                </div>
+                                <button onclick="printMemberCard()" class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs flex items-center gap-2 shadow-sm">
+                                    <i class="fa-solid fa-print"></i> Cetak Kartu Terpilih
+                                </button>
+                            </div>
+
+                            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                                <!-- Left: Add Student & Select Student List -->
+                                <div class="lg:col-span-6 space-y-4">
+                                    <form onsubmit="handleAddStudent(event)" class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
+                                        <h4 class="font-bold text-xs uppercase text-slate-700">Tambah Siswa / Anggota Baru</h4>
+                                        <div class="grid grid-cols-2 gap-2.5">
+                                            <input type="text" id="newStuNisn" required placeholder="NISN (User & Password)" class="px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white">
+                                            <input type="text" id="newStuName" required placeholder="Nama Lengkap Siswa" class="px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white">
+                                            <select id="newStuClass" class="px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white">
+                                                <option value="Kelas 1">Kelas 1</option>
+                                                <option value="Kelas 2">Kelas 2</option>
+                                                <option value="Kelas 3">Kelas 3</option>
+                                                <option value="Kelas 4" selected>Kelas 4</option>
+                                                <option value="Kelas 5">Kelas 5</option>
+                                                <option value="Kelas 6">Kelas 6</option>
+                                            </select>
+                                            <input type="text" id="newStuAddress" required placeholder="Alamat (Mis: Ds. Rejoso)" class="px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white">
+                                        </div>
+                                        <button type="submit" class="w-full py-2 rounded-xl bg-navy-600 hover:bg-navy-700 text-white font-bold text-xs">
+                                            + Simpan Data Siswa
+                                        </button>
+                                    </form>
+
+                                    <div class="max-h-72 overflow-y-auto divide-y divide-slate-100 border border-slate-200 rounded-2xl" id="adminStudentCardList">
+                                        <!-- Rendered by JS -->
+                                    </div>
+                                </div>
+
+                                <!-- Right: Live Printable Member Card Preview -->
+                                <div class="lg:col-span-6 flex flex-col items-center">
+                                    <p class="text-xs font-bold uppercase text-slate-400 mb-3">Pratinjau Kartu Anggota (Siap Cetak)</p>
+                                    
+                                    <div id="printableArea" class="w-full max-w-md rounded-2xl overflow-hidden shadow-xl border-2 border-amber-400 bg-white text-slate-900">
+                                        <!-- Card Header -->
+                                        <div class="bg-gradient-to-r from-navy-800 via-navy-600 to-indigo-900 text-white p-4 flex items-center justify-between border-b-4 border-amber-400">
+                                            <div class="flex items-center gap-3">
+                                                <div id="cardLogoPreview" class="w-10 h-10 rounded-xl bg-white/10 border border-amber-300/50 flex items-center justify-center text-amber-300 font-bold overflow-hidden"></div>
+                                                <div>
+                                                    <h3 id="cardLibName" class="font-display font-bold text-sm uppercase tracking-wide text-amber-300">PERPUSTAKAAN SUMBER ILMU</h3>
+                                                    <p id="cardSchoolName" class="text-xs font-bold text-white">SD NEGERI 1 REJOSO</p>
+                                                    <p id="cardSchoolAddr" class="text-[10px] text-slate-300">Kec. Rejoso, Kabupaten Nganjuk</p>
+                                                </div>
+                                            </div>
+                                            <span class="px-2 py-0.5 rounded bg-amber-400 text-slate-950 font-extrabold text-[10px]">KARTU ANGGOTA</span>
+                                        </div>
+
+                                        <!-- Card Body -->
+                                        <div class="p-5 bg-gradient-to-br from-white via-slate-50 to-amber-50/40 relative">
+                                            <div class="flex gap-4 items-center">
+                                                <!-- Avatar Box -->
+                                                <div class="w-20 h-24 rounded-xl bg-indigo-100 border-2 border-indigo-200 flex flex-col items-center justify-center text-indigo-700 shrink-0">
+                                                    <i class="fa-solid fa-user-graduate text-3xl"></i>
+                                                    <span class="text-[9px] font-bold uppercase mt-1">SISWA AKTIF</span>
+                                                </div>
+                                                <!-- Details -->
+                                                <div class="space-y-1 text-xs flex-1">
+                                                    <div>
+                                                        <span class="text-[10px] text-slate-400 uppercase font-bold block">Nama Anggota</span>
+                                                        <p id="cardStuName" class="font-display font-bold text-base text-slate-900">-</p>
+                                                    </div>
+                                                    <div class="grid grid-cols-2 gap-2">
+                                                        <div>
+                                                            <span class="text-[10px] text-slate-400 uppercase font-bold block">NISN (User Login)</span>
+                                                            <p id="cardStuNisn" class="font-mono font-bold text-indigo-800">-</p>
+                                                        </div>
+                                                        <div>
+                                                            <span class="text-[10px] text-slate-400 uppercase font-bold block">Kelas</span>
+                                                            <p id="cardStuClass" class="font-bold text-slate-800">-</p>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <span class="text-[10px] text-slate-400 uppercase font-bold block">Alamat</span>
+                                                        <p id="cardStuAddr" class="text-slate-600 text-[11px]">-</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Card Footer: Barcode & Signature -->
+                                            <div class="mt-4 pt-3 border-t border-slate-200 flex items-end justify-between">
+                                                <div>
+                                                    <!-- Simulated SVG Barcode -->
+                                                    <div class="flex items-center h-7 gap-[2px] bg-white px-2 py-1 rounded border border-slate-200">
+                                                        <div class="w-1 h-full bg-slate-900"></div>
+                                                        <div class="w-0.5 h-full bg-slate-900"></div>
+                                                        <div class="w-1.5 h-full bg-slate-900"></div>
+                                                        <div class="w-0.5 h-full bg-slate-900"></div>
+                                                        <div class="w-1 h-full bg-slate-900"></div>
+                                                        <div class="w-2 h-full bg-slate-900"></div>
+                                                        <div class="w-0.5 h-full bg-slate-900"></div>
+                                                        <div class="w-1 h-full bg-slate-900"></div>
+                                                        <div class="w-1.5 h-full bg-slate-900"></div>
+                                                        <div class="w-0.5 h-full bg-slate-900"></div>
+                                                        <div class="w-1 h-full bg-slate-900"></div>
+                                                    </div>
+                                                    <span id="cardBarcodeText" class="text-[9px] font-mono text-slate-500 block mt-0.5">0123456789</span>
+                                                </div>
+                                                <div class="text-right text-[10px]">
+                                                    <p class="text-slate-500">Kepala Perpustakaan,</p>
+                                                    <p id="cardHeadName" class="font-bold text-slate-900 mt-3 underline">Dra. Hj. Sulastri, M.Pd.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ADMIN TAB 5: PENGATURAN (PROFIL, BUKU, LOGO, & DATABASE GOOGLE DRIVE) -->
+                    <section id="admTab-pengaturan" class="hidden space-y-6">
+                        
+                        <!-- Sub-panel 1: Edit Profil & Logo -->
+                        <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
+                            <h3 class="font-display font-bold text-lg text-slate-900 mb-1">1. Pengaturan Profil Perpustakaan & Logo</h3>
+                            <p class="text-xs text-slate-500 mb-5">Ubah identitas perpustakaan, kepala perpustakaan, akun admin, serta unggah logo baru.</p>
+
+                            <form onsubmit="handleSaveProfileSettings(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">Nama Perpustakaan</label>
+                                    <input type="text" id="setLibName" required class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">Nama Sekolah</label>
+                                    <input type="text" id="setSchoolName" required class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">Alamat Sekolah</label>
+                                    <input type="text" id="setAddress" required class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">Kepala Perpustakaan</label>
+                                    <input type="text" id="setHeadLibrarian" required class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">Username Admin</label>
+                                    <input type="text" id="setAdminUser" required class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">Password Admin</label>
+                                    <input type="text" id="setAdminPass" required class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-sm">
+                                </div>
+                                <div class="sm:col-span-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2 border-t border-slate-100">
+                                    <div>
+                                        <label class="block text-xs font-bold text-slate-700 mb-1">Ganti Logo Perpustakaan / Sekolah (Gambar)</label>
+                                        <input type="file" id="setLogoInput" accept="image/*" class="text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-amber-100 file:text-amber-900 file:font-bold">
+                                    </div>
+                                    <button type="submit" class="px-6 py-2.5 rounded-xl bg-navy-600 hover:bg-navy-700 text-white font-bold text-xs shrink-0">
+                                        <i class="fa-solid fa-floppy-disk mr-1"></i> Simpan Profil & Logo
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Sub-panel 2: Manajemen Buku & E-Book -->
+                        <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 space-y-5">
+                            <div>
+                                <h3 class="font-display font-bold text-lg text-slate-900">2. Manajemen Koleksi Buku & E-Book</h3>
+                                <p class="text-xs text-slate-500">Tambah atau hapus koleksi buku fisik maupun buku digital (E-Book).</p>
+                            </div>
+
+                            <form onsubmit="handleAdminAddBook(event)" class="bg-slate-50 p-4 rounded-2xl border border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <input type="text" id="newBookTitle" required placeholder="Judul Buku / E-Book" class="px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white">
+                                <input type="text" id="newBookAuthor" required placeholder="Penulis / Penerbit" class="px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white">
+                                <select id="newBookCategory" class="px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white">
+                                    <option value="Dongeng & Cerita Rakyat">Dongeng & Cerita Rakyat</option>
+                                    <option value="Sains & Eksperimen">Sains & Eksperimen</option>
+                                    <option value="Pendidikan & Pancasila">Pendidikan & Pancasila</option>
+                                    <option value="Matematika & Logika">Matematika & Logika</option>
+                                    <option value="Ensiklopedia Anak">Ensiklopedia Anak</option>
+                                </select>
+                                <select id="newBookType" class="px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white">
+                                    <option value="both">Buku Fisik + E-Book Digital</option>
+                                    <option value="physical">Hanya Buku Fisik</option>
+                                    <option value="ebook">Hanya E-Book Digital</option>
+                                </select>
+                                <input type="number" id="newBookStock" min="1" value="5" required placeholder="Stok Fisik" class="px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white">
+                                <button type="submit" class="py-2 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs">
+                                    + Tambah Koleksi Buku
+                                </button>
+                                <div class="sm:col-span-3">
+                                    <textarea id="newBookContent" rows="2" placeholder="Isi ringkas E-Book (pisahkan halaman dengan tanda garis vertikal | jika buku memiliki fitur E-Book)" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs bg-white"></textarea>
+                                </div>
+                            </form>
+
+                            <div class="overflow-x-auto max-h-72">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr class="border-b border-slate-200 text-[11px] font-bold uppercase text-slate-400">
+                                            <th class="py-2.5 px-3">Judul Buku</th>
+                                            <th class="py-2.5 px-3">Kategori</th>
+                                            <th class="py-2.5 px-3">Tipe</th>
+                                            <th class="py-2.5 px-3">Stok</th>
+                                            <th class="py-2.5 px-3 text-right">Hapus</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="adminBooksManageTable" class="divide-y divide-slate-100 text-xs">
+                                        <!-- Rendered by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Sub-panel 3: Integrasi Database Lokal Komputer & Google Drive -->
+                        <div class="bg-gradient-to-br from-navy-800 to-indigo-950 text-white rounded-3xl p-6 shadow-md space-y-5">
+                            <div class="flex items-start justify-between gap-4">
+                                <div>
+                                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-400 text-slate-950 uppercase">Single Database Architecture</span>
+                                    <h3 class="font-display font-bold text-xl mt-1">3. Pusat Database Lokal & Integrasi Google Drive</h3>
+                                    <p class="text-xs text-slate-300 mt-1">Seluruh data buku, siswa, peminjaman, kunjungan, karya, dan cerpen tersimpan dalam 1 berkas Database terpadu.</p>
+                                </div>
+                                <i class="fa-brands fa-google-drive text-4xl text-amber-400"></i>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Local Computer Storage -->
+                                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/15 space-y-3">
+                                    <h4 class="font-bold text-sm flex items-center gap-2 text-amber-300">
+                                        <i class="fa-solid fa-hard-drive"></i> Penyimpanan Lokal Komputer (Server Admin)
+                                    </h4>
+                                    <p class="text-xs text-slate-200 leading-relaxed">
+                                        Simpan seluruh database ke dalam folder komputer (atau folder <strong>Google Drive for Desktop</strong> yang terpasang di PC Admin) dalam format <code>.json</code>.
+                                    </p>
+                                    <div class="flex flex-wrap gap-2 pt-1">
+                                        <button onclick="exportDatabaseJSON()" class="px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold text-xs flex items-center gap-1.5">
+                                            <i class="fa-solid fa-download"></i> Simpan Database (.JSON)
+                                        </button>
+                                        <label class="px-4 py-2 rounded-xl bg-white/15 hover:bg-white/25 text-white font-bold text-xs flex items-center gap-1.5 cursor-pointer">
+                                            <i class="fa-solid fa-upload"></i> Muat Database (.JSON)
+                                            <input type="file" accept=".json" onchange="importDatabaseJSON(event)" class="hidden">
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Google Drive Cloud Sync -->
+                                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/15 space-y-3">
+                                    <h4 class="font-bold text-sm flex items-center gap-2 text-emerald-300">
+                                        <i class="fa-solid fa-cloud-arrow-up"></i> Integrasi Cloud Google Drive & Hosting
+                                    </h4>
+                                    <p class="text-xs text-slate-200 leading-relaxed">
+                                        Masukkan URL Web App <strong>Google Apps Script</strong> (<code>google-apps-script.gs</code>) untuk sinkronisasi database 2 arah ke Google Drive secara otomatis.
+                                    </p>
+                                    <input type="url" id="gdriveWebhookUrl" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3 py-2 rounded-xl bg-slate-900/60 border border-white/20 text-xs text-white placeholder:text-slate-400">
+                                    <div class="flex flex-wrap items-center justify-between gap-2">
+                                        <div class="flex flex-wrap gap-2">
+                                            <button onclick="syncToGoogleDrive()" class="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs flex items-center gap-1.5">
+                                                <i class="fa-solid fa-cloud-arrow-up"></i> Kirim ke Drive
+                                            </button>
+                                            <button onclick="pullFromGoogleDrive()" class="px-3.5 py-2 rounded-xl bg-sky-400 hover:bg-sky-500 text-slate-950 font-bold text-xs flex items-center gap-1.5">
+                                                <i class="fa-solid fa-cloud-arrow-down"></i> Muat dari Drive
+                                            </button>
+                                        </div>
+                                        <span id="lastSyncTimeText" class="text-[11px] text-slate-300">Belum disinkronkan</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- MODAL 1: LOGIN SISWA & ADMIN               -->
+    <!-- ========================================== -->
+    <div id="loginModal" class="fixed inset-0 z-50 hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl border border-slate-200 animate-float-slow" style="animation: none;">
+            <!-- Modal Header -->
+            <div class="bg-gradient-to-r from-navy-800 to-indigo-900 p-6 text-white relative">
+                <button onclick="closeLoginModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-400 text-slate-950 uppercase">Akses Terpadu</span>
+                <h3 class="font-display text-2xl font-bold mt-1">Masuk Perpustakaan Sumber Ilmu</h3>
+                <p class="text-xs text-slate-300">SD Negeri 1 Rejoso</p>
+
+                <!-- Switch Tabs -->
+                <div class="grid grid-cols-2 gap-2 mt-5 bg-slate-950/40 p-1 rounded-xl">
+                    <button onclick="switchLoginModalTab('student')" id="modalTabStudent" class="py-2 rounded-lg font-bold text-xs transition-all bg-amber-400 text-slate-950">
+                        <i class="fa-solid fa-user-graduate mr-1"></i> Login Siswa (NISN)
+                    </button>
+                    <button onclick="switchLoginModalTab('admin')" id="modalTabAdmin" class="py-2 rounded-lg font-bold text-xs transition-all text-slate-300 hover:text-white">
+                        <i class="fa-solid fa-user-shield mr-1"></i> Login Admin
+                    </button>
+                </div>
+            </div>
+
+            <!-- Student Login Form -->
+            <form id="formLoginStudent" onsubmit="handleStudentLogin(event)" class="p-6 space-y-4">
+                <div class="p-3.5 rounded-2xl bg-indigo-50 border border-indigo-100 text-xs text-indigo-900 space-y-1.5">
+                    <p class="font-bold flex items-center gap-1.5"><i class="fa-solid fa-circle-info text-indigo-600"></i> Petunjuk Login Siswa:</p>
+                    <p class="text-slate-600">Gunakan <strong>NISN Siswa</strong> sebagai Username dan <strong>NISN Siswa</strong> sebagai Password. Klik salah satu akun siswa di bawah untuk mencoba langsung:</p>
+                    <div id="demoStudentChips" class="flex flex-wrap gap-1.5 pt-1">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Username (NISN Siswa)</label>
+                    <input type="text" id="loginStuUser" required placeholder="Masukkan 10 digit NISN" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Password (NISN Siswa)</label>
+                    <input type="password" id="loginStuPass" required placeholder="Masukkan NISN Siswa" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none">
+                </div>
+                <button type="submit" class="w-full py-3 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold text-sm shadow-md transition-all">
+                    Masuk ke Dashboard Siswa <i class="fa-solid fa-arrow-right ml-1"></i>
+                </button>
+            </form>
+
+            <!-- Admin Login Form -->
+            <form id="formLoginAdmin" onsubmit="handleAdminLogin(event)" class="hidden p-6 space-y-4">
+                <div class="p-3.5 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-900 flex items-center justify-between">
+                    <div>
+                        <p class="font-bold">Akun Demo Admin Perpustakaan:</p>
+                        <p>User: <code class="font-bold">admin</code> | Pass: <code class="font-bold">admin123</code></p>
+                    </div>
+                    <button type="button" onclick="fillDemoAdmin()" class="px-2.5 py-1.5 rounded-lg bg-amber-400 text-slate-950 font-bold text-[11px]">Isi Otomatis</button>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Username Admin</label>
+                    <input type="text" id="loginAdmUser" required placeholder="admin" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Password Admin</label>
+                    <input type="password" id="loginAdmPass" required placeholder="••••••••" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-indigo-600 focus:outline-none">
+                </div>
+                <button type="submit" class="w-full py-3 rounded-xl bg-navy-700 hover:bg-navy-800 text-white font-bold text-sm shadow-md transition-all">
+                    Masuk Panel Admin <i class="fa-solid fa-shield-halved ml-1"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MODAL 2: INTERACTIVE E-BOOK & STORY READER -->
+    <!-- ========================================== -->
+    <div id="readerModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl border border-slate-200 flex flex-col max-h-[90vh]">
+            <!-- Reader Topbar -->
+            <div class="bg-navy-800 text-white px-6 py-4 flex items-center justify-between">
+                <div>
+                    <span id="readerBadge" class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-400 text-slate-950 uppercase">E-BOOK DIGITAL</span>
+                    <h3 id="readerTitle" class="font-display font-bold text-lg mt-0.5">Judul Bacaan</h3>
+                    <p id="readerAuthor" class="text-xs text-slate-300">Penulis</p>
+                </div>
+                <button onclick="closeReaderModal()" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Reader Body -->
+            <div class="p-6 sm:p-8 overflow-y-auto flex-1 bg-amber-50/40">
+                <div id="readerContent" class="prose max-w-none text-slate-800 leading-relaxed text-sm sm:text-base font-medium bg-white p-6 rounded-2xl shadow-inner border border-amber-200/70 min-h-[240px]">
+                    <!-- Content injected via JS -->
+                </div>
+            </div>
+
+            <!-- Reader Pagination Footer -->
+            <div id="readerFooter" class="px-6 py-4 bg-white border-t border-slate-200 flex items-center justify-between">
+                <button id="btnPrevPage" onclick="changeEbookPage(-1)" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1.5">
+                    <i class="fa-solid fa-chevron-left"></i> Halaman Sebelumnya
+                </button>
+                <span id="readerPageIndicator" class="text-xs font-bold text-slate-500">Halaman 1 / 1</span>
+                <button id="btnNextPage" onclick="changeEbookPage(1)" class="px-4 py-2 rounded-xl bg-navy-600 hover:bg-navy-700 text-white font-bold text-xs flex items-center gap-1.5">
+                    Halaman Berikutnya <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- FOOTER                                     -->
+    <!-- ========================================== -->
+    <footer class="bg-navy-900 text-slate-400 py-8 border-t border-slate-800 no-print mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-amber-400 text-slate-950 flex items-center justify-center font-bold">
+                    <i class="fa-solid fa-book-open"></i>
+                </div>
+                <div>
+                    <p class="font-bold text-white" id="footerLibTitle">Perpustakaan Digital Sumber Ilmu - SD Negeri 1 Rejoso</p>
+                    <p id="footerAddress">Kec. Rejoso, Kabupaten Nganjuk, Jawa Timur</p>
+                </div>
+            </div>
+            <p>&copy; 2026 Perpustakaan Sumber Ilmu SDN 1 Rejoso. Terintegrasi Database Lokal & Google Drive.</p>
+        </div>
+    </footer>
+
+    <!-- ========================================== -->
+    <!-- APPLICATION JAVASCRIPT & SINGLE DATABASE   -->
+    <!-- ========================================== -->
+    <script>
+        const DB_KEY = 'PERPUS_SUMBER_ILMU_SDN1_REJOSO_DB_V1';
+        let activityChartInstance = null;
+        let categoryChartInstance = null;
+
+        // Current Active Session
+        let currentSession = {
+            role: null, // 'student' | 'admin' | null
+            user: null
+        };
+
+        // E-Book Reader State
+        let activeReaderPages = [];
+        let activeReaderPageIdx = 0;
+        let selectedMemberNisnForCard = null;
+
+        // Default Seed Database for SD Negeri 1 Rejoso
+        const defaultDatabase = {
+            settings: {
+                libraryName: 'Perpustakaan Sumber Ilmu',
+                schoolName: 'SD Negeri 1 Rejoso',
+                address: 'Jl. Raya Rejoso No. 12, Kec. Rejoso, Kab. Nganjuk',
+                headLibrarian: 'Dra. Hj. Sulastri, M.Pd.',
+                adminUser: 'admin',
+                adminPass: 'admin123',
+                logoDataUrl: '', // Empty uses default SVG crest
+                gdriveWebhook: '',
+                lastSync: 'Belum pernah'
+            },
+            students: [
+                { nisn: '0123456789', name: 'Budi Santoso', kelas: 'Kelas 4', address: 'Ds. Rejoso, Kec. Rejoso' },
+                { nisn: '0123456790', name: 'Siti Aminah', kelas: 'Kelas 5', address: 'Ds. Klagen, Kec. Rejoso' },
+                { nisn: '0123456791', name: 'Ahmad Rizky Pratama', kelas: 'Kelas 6', address: 'Ds. Banjarejo, Kec. Rejoso' },
+                { nisn: '0123456792', name: 'Nabila Putri Zahra', kelas: 'Kelas 3', address: 'Ds. Rejoso, Kec. Rejoso' },
+                { nisn: '0123456793', name: 'Dimas Aditya', kelas: 'Kelas 5', address: 'Ds. Talun, Kec. Rejoso' }
+            ],
+            books: [
+                {
+                    id: 'BK-001',
+                    title: 'Kisah Nusantara & Legenda Gunung Wilis',
+                    author: 'Balai Pustaka Anak',
+                    category: 'Dongeng & Cerita Rakyat',
+                    type: 'both',
+                    stock: 8,
+                    coverColor: 'from-amber-500 to-orange-600',
+                    icon: 'fa-dragon',
+                    pages: [
+                        'Halaman 1: Di kaki pegunungan yang hijau dan sejuk, hiduplah masyarakat desa yang rukun dan gemar bergotong royong. Anak-anak selalu berkumpul di taman bacaan setiap sore.',
+                        'Halaman 2: Suatu hari, Kakek Wira menceritakan legenda tentang mata air ilmu yang tak pernah kering selama anak-anak terus rajin membaca dan menghormati guru serta orang tua.',
+                        'Halaman 3: Pesan Moral: Siapa yang tekun menuntut ilmu sejak kecil, kelak akan menjadi lentera bagi desa dan bangsanya.'
+                    ]
+                },
+                {
+                    id: 'BK-002',
+                    title: 'Sains Seru: Eksperimen Air & Cahaya',
+                    author: 'Dr. Hendra Wijaya',
+                    category: 'Sains & Eksperimen',
+                    type: 'both',
+                    stock: 6,
+                    coverColor: 'from-sky-500 to-blue-700',
+                    icon: 'fa-flask',
+                    pages: [
+                        'Halaman 1: Mengapa Pelangi Memiliki Tujuh Warna? Saat cahaya matahari melewati tetesan air hujan, cahaya tersebut dibiaskan dan diuraikan menjadi spektrum warna yang indah!',
+                        'Halaman 2: Percobaan Sederhana di Rumah: Siapkan segelas air bening, cermin kecil, dan senter. Arahkan cahaya senter ke cermin di dalam air dan lihat pelangi di dindingmu!',
+                        'Halaman 3: Sains membuat kita memahami betapa menakjubkannya alam ciptaan Tuhan di sekitar kita.'
+                    ]
+                },
+                {
+                    id: 'BK-003',
+                    title: 'Anak Hebat Cinta Pancasila',
+                    author: 'Kemendikbudristek',
+                    category: 'Pendidikan & Pancasila',
+                    type: 'both',
+                    stock: 12,
+                    coverColor: 'from-rose-500 to-red-700',
+                    icon: 'fa-shield-heart',
+                    pages: [
+                        'Halaman 1: Pelajar Pancasila adalah pelajar sepanjang hayat yang memiliki kompetensi global dan berperilaku sesuai nilai-nilai Pancasila.',
+                        'Halaman 2: Enam Profil Pelajar Pancasila: Beriman & Bertakwa, Berkebinekaan Global, Bergotong Royong, Mandiri, Bernalar Kritis, dan Kreatif.'
+                    ]
+                },
+                {
+                    id: 'BK-004',
+                    title: 'Matematika Ceria: Petualangan Angka',
+                    author: 'Rina Kusuma, S.Pd.',
+                    category: 'Matematika & Logika',
+                    type: 'both',
+                    stock: 9,
+                    coverColor: 'from-emerald-500 to-teal-700',
+                    icon: 'fa-calculator',
+                    pages: [
+                        'Halaman 1: Berhitung itu sangat menyenangkan! Bayangkan kamu memiliki 12 buah apel dan ingin membagikannya secara adil kepada 4 orang sahabatmu.',
+                        'Halaman 2: Setiap sahabatmu akan mendapatkan 3 buah apel segar (12 : 4 = 3). Matematika mengajarkan kita keadilan dan ketelitian!'
+                    ]
+                },
+                {
+                    id: 'BK-005',
+                    title: 'Ensiklopedia Flora & Fauna Indonesia',
+                    author: 'Tim Sains Nusantara',
+                    category: 'Ensiklopedia Anak',
+                    type: 'both',
+                    stock: 5,
+                    coverColor: 'from-purple-500 to-indigo-700',
+                    icon: 'fa-leaf',
+                    pages: [
+                        'Halaman 1: Indonesia merupakan salah satu negara dengan keanekaragaman hayati terbesar di dunia. Dari Komodo di Nusa Tenggara hingga Bunga Rafflesia di Sumatera.',
+                        'Halaman 2: Mari kita jaga kelestarian pohon dan hewan di lingkungan sekolah kita agar bumi tetap sejuk dan asri.'
+                    ]
+                }
+            ],
+            loans: [
+                {
+                    id: 'PJ-101',
+                    nisn: '0123456789',
+                    studentName: 'Budi Santoso',
+                    kelas: 'Kelas 4',
+                    bookId: 'BK-001',
+                    bookTitle: 'Kisah Nusantara & Legenda Gunung Wilis',
+                    borrowDate: '2026-11-02',
+                    dueDate: '2026-11-09',
+                    returnDate: '-',
+                    status: 'Dipinjam'
+                },
+                {
+                    id: 'PJ-102',
+                    nisn: '0123456790',
+                    studentName: 'Siti Aminah',
+                    kelas: 'Kelas 5',
+                    bookId: 'BK-002',
+                    bookTitle: 'Sains Seru: Eksperimen Air & Cahaya',
+                    borrowDate: '2026-10-25',
+                    dueDate: '2026-11-01',
+                    returnDate: '2026-10-30',
+                    status: 'Dikembalikan'
+                }
+            ],
+            visits: [
+                { id: 'KJ-1', timestamp: '06 Nov 2026, 07:35', nisn: '0123456789', name: 'Budi Santoso', kelas: 'Kelas 4', purpose: 'Login Portal Siswa & Baca E-Book' },
+                { id: 'KJ-2', timestamp: '06 Nov 2026, 08:10', nisn: '0123456790', name: 'Siti Aminah', kelas: 'Kelas 5', purpose: 'Menulis Cerpen Siswa' },
+                { id: 'KJ-3', timestamp: '05 Nov 2026, 09:15', nisn: '0123456791', name: 'Ahmad Rizky Pratama', kelas: 'Kelas 6', purpose: 'Meminjam Buku Ensiklopedia' }
+            ],
+            works: [
+                {
+                    id: 'KR-1',
+                    nisn: '0123456792',
+                    studentName: 'Nabila Putri Zahra',
+                    kelas: 'Kelas 3',
+                    title: 'Puisi: Taman Ilmu di Sekolahku',
+                    category: 'Puisi & Pantun',
+                    description: 'Di sudut sekolah yang teduh dan rapi,\nBerjajar buku penuh warna-warni,\nSumber Ilmu tempatku merajut mimpi,\nMenjadi anak cerdas kebanggaan negeri.',
+                    imageUrl: '',
+                    date: '04 Nov 2026'
+                },
+                {
+                    id: 'KR-2',
+                    nisn: '0123456789',
+                    studentName: 'Budi Santoso',
+                    kelas: 'Kelas 4',
+                    title: 'Miniatur Kincir Angin Hemat Energi',
+                    category: 'Prakarya Kreatif',
+                    description: 'Prakarya kincir angin dari stik es krim bekas dan dinamo kecil setelah membaca buku Sains Seru di Perpustakaan Sumber Ilmu.',
+                    imageUrl: '',
+                    date: '05 Nov 2026'
+                }
+            ],
+            stories: [
+                {
+                    id: 'CP-1',
+                    nisn: '0123456790',
+                    studentName: 'Siti Aminah',
+                    kelas: 'Kelas 5',
+                    title: 'Lentera Kecil di Desa Rejoso',
+                    theme: 'Persahabatan & Budi Pekerti',
+                    content: 'Setiap pulang sekolah, Rara dan Dika selalu mampir ke Perpustakaan Sumber Ilmu SD Negeri 1 Rejoso. Mereka senang membaca buku cerita rakyat dan berbagi cerita kepada adik-adik kelas 1 yang baru belajar mengeja.\n\nSuatu sore, hujan turun dengan deras. Rara menemukan sebuah buku tua yang mengajarkan cara membuat pupuk kompos dari daun kering di halaman sekolah. Bersama teman-temannya, mereka mempraktikkan ilmu dari buku itu hingga taman sekolah menjadi sangat subur dan memenangkan lomba sekolah adiwiyata.',
+                    likes: 18,
+                    date: '03 Nov 2026'
+                },
+                {
+                    id: 'CP-2',
+                    nisn: '0123456791',
+                    studentName: 'Ahmad Rizky Pratama',
+                    kelas: 'Kelas 6',
+                    title: 'Mimbar Cita-Cita Sang Peneliti Muda',
+                    theme: 'Cita-citaku',
+                    content: 'Sejak duduk di bangku kelas empat, aku selalu penasaran bagaimana pesawat bisa terbang tinggi di angkasa. Ibu Pustakawan di Perpustakaan Sumber Ilmu memberiku buku tentang B.J. Habibie.\n\nAku membacanya dengan penuh semangat. Dari buku itulah aku berjanji untuk rajin belajar matematika dan sains agar kelak bisa mengharumkan nama SD Negeri 1 Rejoso.',
+                    likes: 24,
+                    date: '05 Nov 2026'
+                }
+            ],
+            monthlyProgress: {
+                labels: ['Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov'],
+                visits: [42, 65, 88, 104, 128, 152],
+                loans: [25, 38, 54, 67, 82, 96]
+            }
+        };
+
+        let db = loadDatabase();
+        const SESSION_KEY = 'PERPUS_SUMBER_ILMU_SESSION_V1';
+        let serverApiEndpoint = null; // Terdeteksi otomatis ('./api/db' atau './api.php') saat di-hosting
+
+        function loadDatabase() {
+            try {
+                const raw = localStorage.getItem(DB_KEY);
+                if (!raw) {
+                    localStorage.setItem(DB_KEY, JSON.stringify(defaultDatabase));
+                    return JSON.parse(JSON.stringify(defaultDatabase));
+                }
+                return JSON.parse(raw);
+            } catch (e) {
+                return JSON.parse(JSON.stringify(defaultDatabase));
+            }
+        }
+
+        function saveDatabase(skipRemotePush = false) {
+            localStorage.setItem(DB_KEY, JSON.stringify(db));
+            refreshAllViews();
+            if (!skipRemotePush) {
+                pushDatabaseToHostingServer();
+            }
+        }
+
+        function saveActiveSession() {
+            try {
+                if (currentSession && currentSession.role) {
+                    sessionStorage.setItem(SESSION_KEY, JSON.stringify(currentSession));
+                } else {
+                    sessionStorage.removeItem(SESSION_KEY);
+                }
+            } catch (e) {}
+        }
+
+        function restoreActiveSession() {
+            try {
+                const saved = sessionStorage.getItem(SESSION_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    if (parsed && parsed.role) {
+                        currentSession = parsed;
+                        switchMainView(parsed.role === 'admin' ? 'admin' : 'student');
+                    }
+                }
+            } catch (e) {}
+        }
+
+        function updateSyncBadgeStatus(modeText, isCloud = false) {
+            const badge = document.getElementById('syncBadge');
+            if (!badge) return;
+            badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full ${isCloud ? 'bg-sky-500' : 'bg-emerald-500'} animate-ping"></span> ${modeText}`;
+        }
+
+        // Otomatis mendeteksi dan menyinkronkan database dari Server Hosting (Node.js / cPanel PHP)
+        async function initHostingDatabaseSync() {
+            if (window.location.protocol === 'file:') return;
+            const endpoints = ['./api/db', './api.php'];
+            for (const ep of endpoints) {
+                try {
+                    const res = await fetch(ep, { method: 'GET', headers: { 'Accept': 'application/json' }, cache: 'no-store' });
+                    if (res.ok) {
+                        const remoteDb = await res.json();
+                        if (remoteDb && remoteDb.settings && remoteDb.books && remoteDb.students) {
+                            serverApiEndpoint = ep;
+                            db = remoteDb;
+                            localStorage.setItem(DB_KEY, JSON.stringify(db));
+                            updateSyncBadgeStatus('DB Server Hosting Aktif', true);
+                            refreshAllViews();
+                            return;
+                        }
+                    }
+                } catch (err) {
+                    // Lanjut ke fallback berikutnya bila di-deploy di Static Hosting murni
+                }
+            }
+        }
+
+        async function pushDatabaseToHostingServer() {
+            if (serverApiEndpoint) {
+                try {
+                    await fetch(serverApiEndpoint, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(db)
+                    });
+                } catch (e) {}
+            }
+            // Jika URL Google Apps Script sudah diatur, ikut sinkronkan otomatis ke Cloud Google Drive
+            if (db.settings && db.settings.gdriveWebhook && db.settings.gdriveWebhook.startsWith('https://script.google.com')) {
+                fetch(db.settings.gdriveWebhook, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(db)
+                }).catch(() => {});
+            }
+        }
+
+        // Toast Helper (No alert() used anywhere)
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const colors = {
+                success: 'bg-emerald-600 text-white border-emerald-400',
+                info: 'bg-navy-700 text-white border-amber-400',
+                warning: 'bg-amber-500 text-slate-950 border-amber-300',
+                error: 'bg-rose-600 text-white border-rose-400'
+            };
+            const icons = {
+                success: 'fa-circle-check',
+                info: 'fa-circle-info',
+                warning: 'fa-triangle-exclamation',
+                error: 'fa-circle-xmark'
+            };
+
+            const toast = document.createElement('div');
+            toast.className = `pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-2xl shadow-xl border ${colors[type] || colors.info} text-xs sm:text-sm font-semibold transition-all duration-300`;
+            toast.innerHTML = `
+                <i class="fa-solid ${icons[type] || icons.info} text-base"></i>
+                <span class="flex-1">${message}</span>
+            `;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(-10px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // Render Header Branding & Session Buttons
+        function renderHeaderAndBranding() {
+            const s = db.settings;
+            document.getElementById('headerLibName').textContent = s.libraryName;
+            document.getElementById('headerSchoolName').textContent = s.schoolName;
+            document.getElementById('footerLibTitle').textContent = `${s.libraryName} - ${s.schoolName}`;
+            document.getElementById('footerAddress').textContent = s.address;
+
+            const logoHTML = s.logoDataUrl
+                ? `<img src="${s.logoDataUrl}" alt="Logo" class="w-full h-full object-cover">`
+                : `<i class="fa-solid fa-book-open-reader text-xl"></i>`;
+            document.getElementById('headerLogoWrapper').innerHTML = logoHTML;
+            document.getElementById('cardLogoPreview').innerHTML = logoHTML;
+
+            const actionsEl = document.getElementById('headerActions');
+            const publicLinks = document.getElementById('publicNavLinks');
+
+            if (!currentSession.role) {
+                publicLinks.classList.remove('hidden');
+                actionsEl.innerHTML = `
+                    <button onclick="openLoginModal('student')" class="px-3.5 py-2 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-bold text-xs sm:text-sm flex items-center gap-2 shadow-sm transition-all">
+                        <i class="fa-solid fa-user-graduate"></i>
+                        <span>Login Siswa</span>
+                    </button>
+                    <button onclick="openLoginModal('admin')" class="px-3.5 py-2 rounded-xl bg-navy-700 hover:bg-navy-800 text-white font-semibold text-xs sm:text-sm flex items-center gap-2 transition-all">
+                        <i class="fa-solid fa-user-shield text-amber-300"></i>
+                        <span class="hidden sm:inline">Login Admin</span>
+                    </button>
+                `;
+            } else if (currentSession.role === 'student') {
+                publicLinks.classList.add('hidden');
+                actionsEl.innerHTML = `
+                    <button onclick="switchMainView('public')" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs flex items-center gap-1.5">
+                        <i class="fa-solid fa-house"></i> Beranda
+                    </button>
+                    <button onclick="switchMainView('student')" class="px-3.5 py-2 rounded-xl bg-indigo-50 text-indigo-900 font-bold text-xs flex items-center gap-2 border border-indigo-200">
+                        <i class="fa-solid fa-user-graduate text-indigo-600"></i>
+                        <span>${currentSession.user.name}</span>
+                    </button>
+                    <button onclick="logoutSession()" class="px-3 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-xs flex items-center gap-1.5">
+                        <i class="fa-solid fa-power-off"></i> Keluar
+                    </button>
+                `;
+            } else if (currentSession.role === 'admin') {
+                publicLinks.classList.add('hidden');
+                actionsEl.innerHTML = `
+                    <button onclick="switchMainView('public')" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs flex items-center gap-1.5">
+                        <i class="fa-solid fa-house"></i> Lihat Web Publik
+                    </button>
+                    <button onclick="switchMainView('admin')" class="px-3.5 py-2 rounded-xl bg-amber-100 text-amber-950 font-bold text-xs flex items-center gap-2 border border-amber-300">
+                        <i class="fa-solid fa-user-shield"></i> Panel Admin
+                    </button>
+                    <button onclick="logoutSession()" class="px-3 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-xs flex items-center gap-1.5">
+                        <i class="fa-solid fa-power-off"></i> Keluar
+                    </button>
+                `;
+            }
+        }
+
+        function switchMainView(viewName) {
+            document.getElementById('viewPublic').classList.add('hidden');
+            document.getElementById('viewStudent').classList.add('hidden');
+            document.getElementById('viewAdmin').classList.add('hidden');
+
+            if (viewName === 'public') {
+                document.getElementById('viewPublic').classList.remove('hidden');
+            } else if (viewName === 'student') {
+                document.getElementById('viewStudent').classList.remove('hidden');
+            } else if (viewName === 'admin') {
+                document.getElementById('viewAdmin').classList.remove('hidden');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ==========================================
+        // PUBLIC DASHBOARD RENDERING & CHARTS
+        // ==========================================
+        function renderPublicDashboard() {
+            // Summary counters
+            const totalStock = db.books.reduce((acc, b) => acc + (b.type !== 'ebook' ? Number(b.stock) : 0), 0);
+            const totalEbooks = db.books.filter(b => b.type === 'both' || b.type === 'ebook').length;
+            document.getElementById('statTotalPhysical').textContent = totalStock;
+            document.getElementById('statTotalEbooks').textContent = totalEbooks;
+            document.getElementById('statTotalVisits').textContent = db.visits.length + 140;
+            document.getElementById('statTotalCreations').textContent = db.works.length + db.stories.length;
+
+            // Public Book Grid
+            const bookGrid = document.getElementById('publicBookGrid');
+            bookGrid.innerHTML = db.books.slice(0, 4).map(book => `
+                <div class="group bg-slate-50 rounded-2xl p-4 border border-slate-200/80 hover:shadow-xl hover:-translate-y-1 transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="h-40 rounded-xl bg-gradient-to-br ${book.coverColor || 'from-indigo-600 to-navy-800'} p-4 text-white flex flex-col justify-between relative overflow-hidden shadow-md">
+                            <i class="fa-solid ${book.icon || 'fa-book'} text-6xl absolute -bottom-3 -right-3 opacity-20 group-hover:scale-110 transition-transform"></i>
+                            <div class="flex items-center justify-between">
+                                <span class="px-2 py-0.5 rounded bg-black/25 text-[10px] font-bold backdrop-blur-sm">${book.category}</span>
+                                <span class="px-2 py-0.5 rounded bg-amber-400 text-slate-950 text-[10px] font-extrabold">Stok: ${book.stock}</span>
+                            </div>
+                            <h4 class="font-display font-bold text-base leading-snug drop-shadow">${book.title}</h4>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-3 font-medium"><i class="fa-solid fa-pen-clip mr-1"></i> ${book.author}</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-200/70 flex items-center justify-between gap-2">
+                        <button onclick="openReaderModal('${book.id}', 'ebook')" class="flex-1 py-2 px-3 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors">
+                            <i class="fa-solid fa-book-open"></i> Pratinjau E-Book
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Public Stories Preview
+            const storiesGrid = document.getElementById('publicStoriesGrid');
+            storiesGrid.innerHTML = db.stories.slice(0, 3).map(st => `
+                <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 flex flex-col justify-between hover:shadow-md transition-all">
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-3">
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">${st.theme}</span>
+                            <span class="text-xs font-bold text-amber-500"><i class="fa-solid fa-star"></i> ${st.likes} Apresiasi</span>
+                        </div>
+                        <h3 class="font-display font-bold text-lg text-slate-900">${st.title}</h3>
+                        <p class="text-xs text-slate-400 mt-0.5 mb-3">Karya: <strong class="text-slate-700">${st.studentName}</strong> (${st.kelas})</p>
+                        <p class="text-xs text-slate-600 line-clamp-3 leading-relaxed">${st.content}</p>
+                    </div>
+                    <button onclick="openReaderModal('${st.id}', 'story')" class="mt-4 w-full py-2.5 rounded-xl bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 text-slate-700 font-bold text-xs transition-colors">
+                        Baca Cerpen Selengkapnya <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+            `).join('');
+
+            renderCharts();
+        }
+
+        function renderCharts() {
+            const ctxProgress = document.getElementById('activityProgressChart');
+            const ctxCategory = document.getElementById('categoryChart');
+            if (!ctxProgress || !ctxCategory) return;
+
+            if (activityChartInstance) activityChartInstance.destroy();
+            if (categoryChartInstance) categoryChartInstance.destroy();
+
+            const dynamicVisitsLastMonth = db.monthlyProgress.visits[5] + db.visits.length;
+            const dynamicLoansLastMonth = db.monthlyProgress.loans[5] + db.loans.length;
+
+            activityChartInstance = new Chart(ctxProgress, {
+                type: 'bar',
+                data: {
+                    labels: db.monthlyProgress.labels,
+                    datasets: [
+                        {
+                            type: 'line',
+                            label: 'Kunjungan Siswa Digital & Fisik',
+                            data: [...db.monthlyProgress.visits.slice(0, 5), dynamicVisitsLastMonth],
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.15)',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            fill: true,
+                            pointBackgroundColor: '#f59e0b',
+                            pointRadius: 4
+                        },
+                        {
+                            type: 'bar',
+                            label: 'Buku Dipinjam & E-Book Dibaca',
+                            data: [...db.monthlyProgress.loans.slice(0, 5), dynamicLoansLastMonth],
+                            backgroundColor: '#1e3a8a',
+                            borderRadius: 8,
+                            barThickness: 22
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top', labels: { font: { family: 'Plus Jakarta Sans', size: 11 } } }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // Count categories
+            const catMap = {};
+            db.books.forEach(b => {
+                catMap[b.category] = (catMap[b.category] || 0) + 1;
+            });
+
+            categoryChartInstance = new Chart(ctxCategory, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(catMap),
+                    datasets: [{
+                        data: Object.values(catMap),
+                        backgroundColor: ['#1e3a8a', '#f59e0b', '#0ea5e9', '#10b981', '#f43f5e'],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '65%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } }
+                    }
+                }
+            });
+        }
+
+        // ==========================================
+        // LOGIN MODAL & AUTHENTICATION
+        // ==========================================
+        function openLoginModal(tab = 'student') {
+            document.getElementById('loginModal').classList.remove('hidden');
+            switchLoginModalTab(tab);
+            renderDemoStudentChips();
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.add('hidden');
+        }
+
+        function switchLoginModalTab(tab) {
+            const btnStu = document.getElementById('modalTabStudent');
+            const btnAdm = document.getElementById('modalTabAdmin');
+            const formStu = document.getElementById('formLoginStudent');
+            const formAdm = document.getElementById('formLoginAdmin');
+
+            if (tab === 'student') {
+                btnStu.className = 'py-2 rounded-lg font-bold text-xs transition-all bg-amber-400 text-slate-950';
+                btnAdm.className = 'py-2 rounded-lg font-bold text-xs transition-all text-slate-300 hover:text-white';
+                formStu.classList.remove('hidden');
+                formAdm.classList.add('hidden');
+            } else {
+                btnAdm.className = 'py-2 rounded-lg font-bold text-xs transition-all bg-amber-400 text-slate-950';
+                btnStu.className = 'py-2 rounded-lg font-bold text-xs transition-all text-slate-300 hover:text-white';
+                formAdm.classList.remove('hidden');
+                formStu.classList.add('hidden');
+            }
+        }
+
+        function renderDemoStudentChips() {
+            const container = document.getElementById('demoStudentChips');
+            container.innerHTML = db.students.slice(0, 3).map(s => `
+                <button type="button" onclick="fillDemoStudent('${s.nisn}')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-amber-100 text-indigo-900 border border-indigo-200 font-bold text-[11px] transition-colors">
+                    ${s.name} (${s.nisn})
+                </button>
+            `).join('');
+        }
+
+        function fillDemoStudent(nisn) {
+            document.getElementById('loginStuUser').value = nisn;
+            document.getElementById('loginStuPass').value = nisn;
+        }
+
+        function fillDemoAdmin() {
+            document.getElementById('loginAdmUser').value = db.settings.adminUser;
+            document.getElementById('loginAdmPass').value = db.settings.adminPass;
+        }
+
+        function handleStudentLogin(e) {
+            e.preventDefault();
+            const userNisn = document.getElementById('loginStuUser').value.trim();
+            const passNisn = document.getElementById('loginStuPass').value.trim();
+
+            const student = db.students.find(s => s.nisn === userNisn && userNisn === passNisn);
+            if (!student) {
+                showToast('NISN tidak ditemukan atau Username & Password NISN tidak sama!', 'error');
+                return;
+            }
+
+            currentSession = { role: 'student', user: student };
+            saveActiveSession();
+
+            // Record automatic library visit
+            const now = new Date();
+            const formattedTime = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) + ', ' +
+                                  now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            db.visits.unshift({
+                id: 'KJ-' + Date.now().toString().slice(-4),
+                timestamp: formattedTime,
+                nisn: student.nisn,
+                name: student.name,
+                kelas: student.kelas,
+                purpose: 'Login Portal Siswa Digital'
+            });
+
+            saveDatabase();
+            closeLoginModal();
+            switchMainView('student');
+            showToast(`Selamat datang di Perpustakaan Sumber Ilmu, ${student.name}!`, 'success');
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const u = document.getElementById('loginAdmUser').value.trim();
+            const p = document.getElementById('loginAdmPass').value.trim();
+
+            if (u === db.settings.adminUser && p === db.settings.adminPass) {
+                currentSession = { role: 'admin', user: { name: 'Administrator Perpustakaan' } };
+                saveActiveSession();
+                closeLoginModal();
+                renderHeaderAndBranding();
+                refreshAdminDashboard();
+                switchMainView('admin');
+                showToast('Login Admin berhasil! Selamat bertugas.', 'success');
+            } else {
+                showToast('Username atau Password Admin salah!', 'error');
+            }
+        }
+
+        function logoutSession() {
+            currentSession = { role: null, user: null };
+            saveActiveSession();
+            renderHeaderAndBranding();
+            switchMainView('public');
+            showToast('Anda telah keluar dari sesi.', 'info');
+        }
+
+        // ==========================================
+        // STUDENT DASHBOARD LOGIC
+        // ==========================================
+        function switchStudentTab(tabName) {
+            ['pinjam', 'ebook', 'karya', 'cerpen'].forEach(t => {
+                document.getElementById(`stuTab-${t}`).classList.add('hidden');
+                const btn = document.getElementById(`stuTabBtn-${t}`);
+                btn.className = 'stu-tab-btn px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition-all bg-white/10 text-white hover:bg-white/20';
+            });
+
+            document.getElementById(`stuTab-${tabName}`).classList.remove('hidden');
+            document.getElementById(`stuTabBtn-${tabName}`).className = 'stu-tab-btn px-4 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center gap-2 transition-all bg-amber-400 text-slate-950 shadow-md';
+        }
+
+        function refreshStudentDashboard() {
+            if (currentSession.role !== 'student') return;
+            const stu = currentSession.user;
+
+            document.getElementById('studentBannerName').textContent = `Halo, ${stu.name}!`;
+            document.getElementById('studentBannerClass').textContent = stu.kelas;
+            document.getElementById('studentBannerNisn').textContent = `NISN: ${stu.nisn} • ${stu.address}`;
+
+            // Render Active Loans for this student
+            const myLoans = db.loans.filter(l => l.nisn === stu.nisn && l.status === 'Dipinjam');
+            const activeContainer = document.getElementById('studentActiveLoansList');
+            if (myLoans.length === 0) {
+                activeContainer.innerHTML = `
+                    <div class="col-span-2 p-6 rounded-2xl bg-slate-50 border border-dashed border-slate-200 text-center text-xs text-slate-500">
+                        Kamu belum memiliki pinjaman buku aktif saat ini. Silakan pilih buku di katalog bawah untuk meminjam!
+                    </div>
+                `;
+            } else {
+                activeContainer.innerHTML = myLoans.map(l => `
+                    <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-200 flex items-center justify-between gap-4">
+                        <div>
+                            <span class="px-2 py-0.5 rounded bg-amber-400 text-slate-950 font-bold text-[10px]">Sedang Dipinjam</span>
+                            <h4 class="font-display font-bold text-base text-slate-900 mt-1">${l.bookTitle}</h4>
+                            <p class="text-xs text-slate-600">Pinjam: ${l.borrowDate} • Batas Kembali: <strong>${l.dueDate}</strong></p>
+                        </div>
+                        <button onclick="handleStudentReturnBook('${l.id}')" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shrink-0 shadow-sm">
+                            <i class="fa-solid fa-rotate-left mr-1"></i> Kembalikan Buku
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            renderStudentBorrowCatalog();
+
+            // Render E-Books
+            const ebooks = db.books.filter(b => b.type === 'both' || b.type === 'ebook');
+            document.getElementById('studentEbookGrid').innerHTML = ebooks.map(b => `
+                <div class="bg-white rounded-3xl p-5 shadow-sm border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <div class="h-36 rounded-2xl bg-gradient-to-r ${b.coverColor || 'from-indigo-600 to-navy-800'} p-4 text-white flex flex-col justify-between relative overflow-hidden">
+                            <i class="fa-solid ${b.icon || 'fa-book-open'} text-5xl absolute -bottom-2 -right-2 opacity-20"></i>
+                            <span class="px-2.5 py-0.5 rounded-full bg-black/25 text-[10px] font-bold w-fit">${b.category}</span>
+                            <h4 class="font-display font-bold text-lg leading-snug">${b.title}</h4>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-3">Penulis: <strong>${b.author}</strong> • ${(b.pages || []).length} Halaman Baca</p>
+                    </div>
+                    <button onclick="openReaderModal('${b.id}', 'ebook')" class="mt-4 w-full py-2.5 rounded-xl bg-navy-600 hover:bg-navy-700 text-white font-bold text-xs flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-book-open-reader"></i> Baca E-Book Sekarang
+                    </button>
+                </div>
+            `).join('');
+
+            // Render Student Works Gallery
+            document.getElementById('worksCountBadge').textContent = `${db.works.length} Karya`;
+            document.getElementById('studentWorksGallery').innerHTML = db.works.map(w => `
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        ${w.imageUrl ? `<img src="${w.imageUrl}" alt="${w.title}" class="w-full h-36 object-cover rounded-xl mb-3 border border-slate-100">` : ''}
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 font-bold text-[10px]">${w.category}</span>
+                            <span class="text-[11px] text-slate-400">${w.date}</span>
+                        </div>
+                        <h4 class="font-display font-bold text-base text-slate-900 mt-1.5">${w.title}</h4>
+                        <p class="text-xs text-slate-600 mt-1 whitespace-pre-line leading-relaxed">${w.description}</p>
+                    </div>
+                    <p class="text-[11px] font-bold text-indigo-900 mt-3 pt-2 border-t border-slate-100">
+                        <i class="fa-solid fa-user-pen mr-1"></i> ${w.studentName} (${w.kelas})
+                    </p>
+                </div>
+            `).join('');
+
+            // Render Student Stories List
+            document.getElementById('studentStoriesList').innerHTML = db.stories.map(st => `
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-700 font-bold text-[10px]">${st.theme}</span>
+                        <span class="text-xs text-slate-400">${st.date}</span>
+                    </div>
+                    <h4 class="font-display font-bold text-lg text-slate-900">${st.title}</h4>
+                    <p class="text-xs text-slate-500 mb-2">Ditulis oleh: <strong>${st.studentName}</strong> (${st.kelas})</p>
+                    <p class="text-xs text-slate-600 line-clamp-3 leading-relaxed">${st.content}</p>
+                    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+                        <button onclick="likeStudentStory('${st.id}')" class="px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-700 font-bold text-xs flex items-center gap-1.5">
+                            <i class="fa-solid fa-star text-amber-500"></i> Beri Bintang (${st.likes})
+                        </button>
+                        <button onclick="openReaderModal('${st.id}', 'story')" class="px-4 py-1.5 rounded-xl bg-navy-600 hover:bg-navy-700 text-white font-bold text-xs">
+                            Baca Cerpen Penuh
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderStudentBorrowCatalog() {
+            const q = (document.getElementById('studentSearchBook')?.value || '').toLowerCase();
+            const books = db.books.filter(b => b.type !== 'ebook' && (b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q)));
+
+            document.getElementById('studentBorrowCatalogGrid').innerHTML = books.map(b => `
+                <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <div class="h-32 rounded-xl bg-gradient-to-br ${b.coverColor || 'from-navy-600 to-indigo-800'} p-3.5 text-white flex flex-col justify-between">
+                            <div class="flex justify-between items-center">
+                                <span class="text-[10px] font-bold bg-black/25 px-2 py-0.5 rounded">${b.category}</span>
+                                <span class="text-[10px] font-extrabold bg-amber-400 text-slate-950 px-2 py-0.5 rounded">Tersedia: ${b.stock}</span>
+                            </div>
+                            <h4 class="font-display font-bold text-sm leading-snug">${b.title}</h4>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-2">${b.author}</p>
+                    </div>
+                    <button onclick="handleStudentBorrowBook('${b.id}')" ${b.stock <= 0 ? 'disabled' : ''} class="mt-3 w-full py-2 rounded-xl ${b.stock > 0 ? 'bg-amber-400 hover:bg-amber-500 text-slate-950' : 'bg-slate-200 text-slate-400 cursor-not-allowed'} font-bold text-xs transition-colors">
+                        <i class="fa-solid fa-hand-holding-heart mr-1"></i> ${b.stock > 0 ? 'Pinjam Buku (7 Hari)' : 'Stok Habis'}
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function handleStudentBorrowBook(bookId) {
+            if (currentSession.role !== 'student') return;
+            const stu = currentSession.user;
+            const book = db.books.find(b => b.id === bookId);
+            if (!book || book.stock <= 0) {
+                showToast('Maaf, stok buku ini sedang habis.', 'warning');
+                return;
+            }
+
+            const alreadyBorrowed = db.loans.find(l => l.nisn === stu.nisn && l.bookId === bookId && l.status === 'Dipinjam');
+            if (alreadyBorrowed) {
+                showToast('Kamu sedang meminjam buku yang sama!', 'warning');
+                return;
+            }
+
+            book.stock -= 1;
+            const today = new Date();
+            const due = new Date();
+            due.setDate(today.getDate() + 7);
+
+            db.loans.unshift({
+                id: 'PJ-' + Date.now().toString().slice(-4),
+                nisn: stu.nisn,
+                studentName: stu.name,
+                kelas: stu.kelas,
+                bookId: book.id,
+                bookTitle: book.title,
+                borrowDate: today.toISOString().split('T')[0],
+                dueDate: due.toISOString().split('T')[0],
+                returnDate: '-',
+                status: 'Dipinjam'
+            });
+
+            saveDatabase();
+            showToast(`Berhasil meminjam buku "${book.title}"!`, 'success');
+        }
+
+        function handleStudentReturnBook(loanId) {
+            const loan = db.loans.find(l => l.id === loanId);
+            if (!loan || loan.status === 'Dikembalikan') return;
+
+            loan.status = 'Dikembalikan';
+            loan.returnDate = new Date().toISOString().split('T')[0];
+
+            const book = db.books.find(b => b.id === loan.bookId);
+            if (book) book.stock += 1;
+
+            saveDatabase();
+            showToast(`Terima kasih! Buku "${loan.bookTitle}" telah berhasil dikembalikan.`, 'success');
+        }
+
+        function handleUploadWork(e) {
+            e.preventDefault();
+            if (currentSession.role !== 'student') return;
+            const stu = currentSession.user;
+            const title = document.getElementById('workTitle').value.trim();
+            const category = document.getElementById('workCategory').value;
+            const desc = document.getElementById('workDesc').value.trim();
+            const fileInput = document.getElementById('workImageInput');
+
+            const finalizeSave = (imgData) => {
+                db.works.unshift({
+                    id: 'KR-' + Date.now().toString().slice(-4),
+                    nisn: stu.nisn,
+                    studentName: stu.name,
+                    kelas: stu.kelas,
+                    title,
+                    category,
+                    description: desc,
+                    imageUrl: imgData || '',
+                    date: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })
+                });
+                e.target.reset();
+                saveDatabase();
+                showToast('Karya siswa berhasil diunggah ke galeri sekolah!', 'success');
+            };
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (ev) => finalizeSave(ev.target.result);
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                finalizeSave('');
+            }
+        }
+
+        function handleCreateStory(e) {
+            e.preventDefault();
+            if (currentSession.role !== 'student') return;
+            const stu = currentSession.user;
+            const title = document.getElementById('storyTitle').value.trim();
+            const theme = document.getElementById('storyTheme').value;
+            const content = document.getElementById('storyContent').value.trim();
+
+            db.stories.unshift({
+                id: 'CP-' + Date.now().toString().slice(-4),
+                nisn: stu.nisn,
+                studentName: stu.name,
+                kelas: stu.kelas,
+                title,
+                theme,
+                content,
+                likes: 1,
+                date: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })
+            });
+
+            e.target.reset();
+            saveDatabase();
+            showToast('Cerpen kamu berhasil diterbitkan! Teruslah berkarya.', 'success');
+        }
+
+        function likeStudentStory(storyId) {
+            const st = db.stories.find(s => s.id === storyId);
+            if (!st) return;
+            st.likes += 1;
+            saveDatabase();
+            showToast(`Kamu memberi bintang apresiasi untuk cerpen "${st.title}"!`, 'info');
+        }
+
+        // ==========================================
+        // INTERACTIVE E-BOOK & STORY READER MODAL
+        // ==========================================
+        function openReaderModal(itemId, mode = 'ebook') {
+            const modal = document.getElementById('readerModal');
+            const footer = document.getElementById('readerFooter');
+
+            if (mode === 'ebook') {
+                const book = db.books.find(b => b.id === itemId);
+                if (!book) return;
+                document.getElementById('readerBadge').textContent = `E-BOOK • ${book.category}`;
+                document.getElementById('readerTitle').textContent = book.title;
+                document.getElementById('readerAuthor').textContent = `Penulis: ${book.author}`;
+                activeReaderPages = book.pages && book.pages.length > 0 ? book.pages : ['Isi E-Book lengkap sedang disiapkan oleh pustakawan SD Negeri 1 Rejoso.'];
+                activeReaderPageIdx = 0;
+                footer.classList.remove('hidden');
+                renderEbookPageContent();
+            } else {
+                const st = db.stories.find(s => s.id === itemId);
+                if (!st) return;
+                document.getElementById('readerBadge').textContent = `CERPEN SISWA • ${st.theme}`;
+                document.getElementById('readerTitle').textContent = st.title;
+                document.getElementById('readerAuthor').textContent = `Ditulis oleh: ${st.studentName} (${st.kelas}) • ${st.date}`;
+                document.getElementById('readerContent').innerHTML = `<p class="whitespace-pre-line leading-relaxed">${st.content}</p>`;
+                footer.classList.add('hidden');
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function renderEbookPageContent() {
+            document.getElementById('readerContent').innerHTML = `
+                <div class="space-y-4">
+                    <p class="leading-relaxed text-base">${activeReaderPages[activeReaderPageIdx]}</p>
+                </div>
+            `;
+            document.getElementById('readerPageIndicator').textContent = `Halaman ${activeReaderPageIdx + 1} dari ${activeReaderPages.length}`;
+            document.getElementById('btnPrevPage').disabled = activeReaderPageIdx === 0;
+            document.getElementById('btnNextPage').disabled = activeReaderPageIdx === activeReaderPages.length - 1;
+        }
+
+        function changeEbookPage(delta) {
+            const next = activeReaderPageIdx + delta;
+            if (next >= 0 && next < activeReaderPages.length) {
+                activeReaderPageIdx = next;
+                renderEbookPageContent();
+            }
+        }
+
+        function closeReaderModal() {
+            document.getElementById('readerModal').classList.add('hidden');
+        }
+
+        // ==========================================
+        // ADMIN DASHBOARD LOGIC
+        // ==========================================
+        function switchAdminTab(tabName) {
+            ['sirkulasi', 'rekap', 'kunjungan', 'kartu', 'pengaturan'].forEach(t => {
+                document.getElementById(`admTab-${t}`).classList.add('hidden');
+                document.getElementById(`admTabBtn-${t}`).className = 'adm-tab-btn w-full text-left px-4 py-3 rounded-xl font-semibold text-xs sm:text-sm flex items-center gap-3 transition-all text-slate-200 hover:bg-white/10';
+            });
+
+            document.getElementById(`admTab-${tabName}`).classList.remove('hidden');
+            document.getElementById(`admTabBtn-${tabName}`).className = 'adm-tab-btn w-full text-left px-4 py-3 rounded-xl font-semibold text-xs sm:text-sm flex items-center gap-3 transition-all bg-amber-400 text-slate-950';
+        }
+
+        function toggleManualLoanForm() {
+            document.getElementById('adminManualLoanForm').classList.toggle('hidden');
+        }
+
+        function refreshAdminDashboard() {
+            // Populate dropdowns
+            const stuOptions = db.students.map(s => `<option value="${s.nisn}">${s.name} - ${s.kelas} (${s.nisn})</option>`).join('');
+            document.getElementById('admLoanStudent').innerHTML = stuOptions;
+            document.getElementById('admVisitStudent').innerHTML = stuOptions;
+
+            const bookOptions = db.books.filter(b => b.type !== 'ebook' && b.stock > 0).map(b => `<option value="${b.id}">${b.title} (Stok: ${b.stock})</option>`).join('');
+            document.getElementById('admLoanBook').innerHTML = bookOptions;
+
+            // 1. Sirkulasi Table
+            document.getElementById('adminActiveLoansTable').innerHTML = db.loans.map(l => `
+                <tr class="hover:bg-slate-50">
+                    <td class="py-3 px-3">
+                        <p class="font-bold text-slate-900">${l.studentName}</p>
+                        <p class="text-[11px] text-slate-400">${l.nisn} • ${l.kelas}</p>
+                    </td>
+                    <td class="py-3 px-3 font-semibold text-slate-800">${l.bookTitle}</td>
+                    <td class="py-3 px-3 text-slate-600">${l.borrowDate}</td>
+                    <td class="py-3 px-3 text-slate-600">${l.dueDate}</td>
+                    <td class="py-3 px-3">
+                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold ${l.status === 'Dipinjam' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'}">
+                            ${l.status}
+                        </span>
+                    </td>
+                    <td class="py-3 px-3 text-right">
+                        ${l.status === 'Dipinjam' ? `
+                            <button onclick="handleStudentReturnBook('${l.id}')" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs">
+                                Terima Pengembalian
+                            </button>
+                        ` : `<span class="text-xs text-slate-400">Kembali: ${l.returnDate}</span>`}
+                    </td>
+                </tr>
+            `).join('');
+
+            // 2. Rekap Table
+            renderAdminRekap();
+
+            // 3. Visits Table
+            document.getElementById('adminVisitsTable').innerHTML = db.visits.map(v => `
+                <tr class="hover:bg-slate-50">
+                    <td class="py-3 px-3 font-medium text-slate-600">${v.timestamp}</td>
+                    <td class="py-3 px-3 font-mono text-xs text-indigo-700 font-bold">${v.nisn}</td>
+                    <td class="py-3 px-3 font-bold text-slate-900">${v.name}</td>
+                    <td class="py-3 px-3 text-slate-600">${v.kelas}</td>
+                    <td class="py-3 px-3">
+                        <span class="px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-800 font-semibold text-xs">${v.purpose}</span>
+                    </td>
+                </tr>
+            `).join('');
+
+            // 4. Member Card List & Preview
+            if (!selectedMemberNisnForCard && db.students.length > 0) {
+                selectedMemberNisnForCard = db.students[0].nisn;
+            }
+            document.getElementById('adminStudentCardList').innerHTML = db.students.map(s => `
+                <div onclick="selectStudentForCard('${s.nisn}')" class="p-3.5 flex items-center justify-between cursor-pointer hover:bg-indigo-50/70 transition-colors ${selectedMemberNisnForCard === s.nisn ? 'bg-indigo-50 border-l-4 border-indigo-600' : ''}">
+                    <div>
+                        <p class="font-bold text-xs sm:text-sm text-slate-900">${s.name}</p>
+                        <p class="text-[11px] text-slate-500">NISN: ${s.nisn} • ${s.kelas}</p>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-lg bg-amber-100 text-amber-900 font-bold text-[11px]">Pilih Kartu</span>
+                </div>
+            `).join('');
+            renderMemberCardPreview();
+
+            // 5. Settings Inputs & Books Table
+            const s = db.settings;
+            document.getElementById('setLibName').value = s.libraryName;
+            document.getElementById('setSchoolName').value = s.schoolName;
+            document.getElementById('setAddress').value = s.address;
+            document.getElementById('setHeadLibrarian').value = s.headLibrarian;
+            document.getElementById('setAdminUser').value = s.adminUser;
+            document.getElementById('setAdminPass').value = s.adminPass;
+            document.getElementById('gdriveWebhookUrl').value = s.gdriveWebhook || '';
+            document.getElementById('lastSyncTimeText').textContent = `Sinkron terakhir: ${s.lastSync}`;
+
+            document.getElementById('adminBooksManageTable').innerHTML = db.books.map(b => `
+                <tr class="hover:bg-slate-50">
+                    <td class="py-2.5 px-3 font-bold text-slate-800">${b.title}<br><span class="font-normal text-slate-400">${b.author}</span></td>
+                    <td class="py-2.5 px-3 text-slate-600">${b.category}</td>
+                    <td class="py-2.5 px-3 uppercase text-[10px] font-bold text-indigo-700">${b.type}</td>
+                    <td class="py-2.5 px-3 font-bold">${b.stock}</td>
+                    <td class="py-2.5 px-3 text-right">
+                        <button onclick="handleAdminDeleteBook('${b.id}')" class="text-rose-600 hover:text-rose-800 font-bold px-2 py-1">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderAdminRekap() {
+            const filter = document.getElementById('rekapFilterStatus')?.value || 'ALL';
+            const filtered = filter === 'ALL' ? db.loans : db.loans.filter(l => l.status === filter);
+
+            document.getElementById('rekapTotalCount').textContent = db.loans.length;
+            document.getElementById('rekapActiveCount').textContent = db.loans.filter(l => l.status === 'Dipinjam').length;
+            document.getElementById('rekapReturnedCount').textContent = db.loans.filter(l => l.status === 'Dikembalikan').length;
+
+            document.getElementById('adminRekapTable').innerHTML = filtered.map(l => `
+                <tr>
+                    <td class="py-2.5 px-3 font-mono text-xs text-slate-500">${l.id}</td>
+                    <td class="py-2.5 px-3 font-bold text-slate-900">${l.studentName} (${l.kelas})</td>
+                    <td class="py-2.5 px-3 text-slate-700">${l.bookTitle}</td>
+                    <td class="py-2.5 px-3 text-slate-600">${l.borrowDate}</td>
+                    <td class="py-2.5 px-3 text-slate-600">${l.returnDate}</td>
+                    <td class="py-2.5 px-3">
+                        <span class="px-2 py-0.5 rounded-full text-[11px] font-bold ${l.status === 'Dipinjam' ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'}">
+                            ${l.status}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function handleAdminCreateLoan(e) {
+            e.preventDefault();
+            const nisn = document.getElementById('admLoanStudent').value;
+            const bookId = document.getElementById('admLoanBook').value;
+            const days = parseInt(document.getElementById('admLoanDays').value, 10);
+
+            const student = db.students.find(s => s.nisn === nisn);
+            const book = db.books.find(b => b.id === bookId);
+            if (!student || !book || book.stock <= 0) return;
+
+            book.stock -= 1;
+            const today = new Date();
+            const due = new Date();
+            due.setDate(today.getDate() + days);
+
+            db.loans.unshift({
+                id: 'PJ-' + Date.now().toString().slice(-4),
+                nisn: student.nisn,
+                studentName: student.name,
+                kelas: student.kelas,
+                bookId: book.id,
+                bookTitle: book.title,
+                borrowDate: today.toISOString().split('T')[0],
+                dueDate: due.toISOString().split('T')[0],
+                returnDate: '-',
+                status: 'Dipinjam'
+            });
+
+            saveDatabase();
+            showToast(`Peminjaman untuk ${student.name} berhasil dicatat!`, 'success');
+        }
+
+        function handleAdminAddVisit(e) {
+            e.preventDefault();
+            const nisn = document.getElementById('admVisitStudent').value;
+            const purpose = document.getElementById('admVisitPurpose').value.trim();
+            const student = db.students.find(s => s.nisn === nisn);
+            if (!student) return;
+
+            const now = new Date();
+            const formattedTime = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) + ', ' +
+                                  now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+            db.visits.unshift({
+                id: 'KJ-' + Date.now().toString().slice(-4),
+                timestamp: formattedTime,
+                nisn: student.nisn,
+                name: student.name,
+                kelas: student.kelas,
+                purpose
+            });
+
+            saveDatabase();
+            showToast(`Kunjungan ${student.name} berhasil ditambahkan!`, 'success');
+        }
+
+        function handleAddStudent(e) {
+            e.preventDefault();
+            const nisn = document.getElementById('newStuNisn').value.trim();
+            const name = document.getElementById('newStuName').value.trim();
+            const kelas = document.getElementById('newStuClass').value;
+            const address = document.getElementById('newStuAddress').value.trim();
+
+            if (db.students.some(s => s.nisn === nisn)) {
+                showToast('NISN tersebut sudah terdaftar!', 'warning');
+                return;
+            }
+
+            db.students.push({ nisn, name, kelas, address });
+            selectedMemberNisnForCard = nisn;
+            e.target.reset();
+            saveDatabase();
+            showToast(`Siswa ${name} (NISN: ${nisn}) berhasil ditambahkan!`, 'success');
+        }
+
+        function selectStudentForCard(nisn) {
+            selectedMemberNisnForCard = nisn;
+            refreshAdminDashboard();
+        }
+
+        function renderMemberCardPreview() {
+            const stu = db.students.find(s => s.nisn === selectedMemberNisnForCard) || db.students[0];
+            if (!stu) return;
+
+            document.getElementById('cardLibName').textContent = db.settings.libraryName.toUpperCase();
+            document.getElementById('cardSchoolName').textContent = db.settings.schoolName.toUpperCase();
+            document.getElementById('cardSchoolAddr').textContent = db.settings.address;
+            document.getElementById('cardHeadName').textContent = db.settings.headLibrarian;
+
+            document.getElementById('cardStuName').textContent = stu.name;
+            document.getElementById('cardStuNisn').textContent = stu.nisn;
+            document.getElementById('cardStuClass').textContent = stu.kelas;
+            document.getElementById('cardStuAddr').textContent = stu.address;
+            document.getElementById('cardBarcodeText').textContent = `*${stu.nisn}*`;
+        }
+
+        function printMemberCard() {
+            window.print();
+        }
+
+        function handleSaveProfileSettings(e) {
+            e.preventDefault();
+            db.settings.libraryName = document.getElementById('setLibName').value.trim();
+            db.settings.schoolName = document.getElementById('setSchoolName').value.trim();
+            db.settings.address = document.getElementById('setAddress').value.trim();
+            db.settings.headLibrarian = document.getElementById('setHeadLibrarian').value.trim();
+            db.settings.adminUser = document.getElementById('setAdminUser').value.trim();
+            db.settings.adminPass = document.getElementById('setAdminPass').value.trim();
+
+            const logoInput = document.getElementById('setLogoInput');
+            if (logoInput.files && logoInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    db.settings.logoDataUrl = ev.target.result;
+                    saveDatabase();
+                    showToast('Profil perpustakaan & Logo baru berhasil disimpan!', 'success');
+                };
+                reader.readAsDataURL(logoInput.files[0]);
+            } else {
+                saveDatabase();
+                showToast('Pengaturan profil perpustakaan berhasil diperbarui!', 'success');
+            }
+        }
+
+        function handleAdminAddBook(e) {
+            e.preventDefault();
+            const title = document.getElementById('newBookTitle').value.trim();
+            const author = document.getElementById('newBookAuthor').value.trim();
+            const category = document.getElementById('newBookCategory').value;
+            const type = document.getElementById('newBookType').value;
+            const stock = parseInt(document.getElementById('newBookStock').value, 10) || 1;
+            const rawContent = document.getElementById('newBookContent').value.trim();
+
+            const pages = rawContent ? rawContent.split('|').map(p => p.trim()) : [
+                `Selamat membaca buku "${title}" karya ${author} di Perpustakaan Sumber Ilmu SD Negeri 1 Rejoso.`
+            ];
+
+            db.books.unshift({
+                id: 'BK-' + Date.now().toString().slice(-3),
+                title,
+                author,
+                category,
+                type,
+                stock,
+                coverColor: 'from-indigo-600 to-navy-800',
+                icon: 'fa-book-open',
+                pages
+            });
+
+            e.target.reset();
+            saveDatabase();
+            showToast(`Buku "${title}" berhasil ditambahkan ke database!`, 'success');
+        }
+
+        function handleAdminDeleteBook(bookId) {
+            db.books = db.books.filter(b => b.id !== bookId);
+            saveDatabase();
+            showToast('Koleksi buku berhasil dihapus.', 'info');
+        }
+
+        // ==========================================
+        // DATABASE EXPORT, IMPORT & GOOGLE DRIVE SYNC
+        // ==========================================
+        function exportDatabaseJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute("href", dataStr);
+            const dateTag = new Date().toISOString().split('T')[0];
+            dlAnchor.setAttribute("download", `Database_Perpus_Sumber_Ilmu_SDN1_Rejoso_${dateTag}.json`);
+            document.body.appendChild(dlAnchor);
+            dlAnchor.click();
+            dlAnchor.remove();
+            showToast('File Database (.json) berhasil diunduh ke penyimpanan komputer!', 'success');
+        }
+
+        function importDatabaseJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (imported && imported.settings && imported.books && imported.students) {
+                        db = imported;
+                        saveDatabase();
+                        showToast('Database berhasil dipulihkan dari komputer!', 'success');
+                    } else {
+                        showToast('Format file JSON tidak sesuai dengan struktur Perpustakaan Sumber Ilmu.', 'error');
+                    }
+                } catch (err) {
+                    showToast('Gagal membaca file JSON!', 'error');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function syncToGoogleDrive() {
+            const url = document.getElementById('gdriveWebhookUrl').value.trim();
+            db.settings.gdriveWebhook = url;
+            const nowStr = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
+            db.settings.lastSync = nowStr;
+            saveDatabase();
+
+            if (url && url.startsWith('https://script.google.com')) {
+                fetch(url, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(db)
+                }).then(() => {
+                    updateSyncBadgeStatus('Google Drive Cloud Aktif', true);
+                    showToast('Database berhasil dikirim ke Google Drive melalui Google Apps Script!', 'success');
+                }).catch(() => {
+                    showToast('Disimpan di lokal & siap disinkronkan ke Google Drive.', 'info');
+                });
+            } else {
+                showToast('Snapshot Database Lokal berhasil disinkronkan untuk cadangan Google Drive!', 'success');
+            }
+        }
+
+        async function pullFromGoogleDrive() {
+            const url = (document.getElementById('gdriveWebhookUrl')?.value || db.settings.gdriveWebhook || '').trim();
+            if (!url || !url.startsWith('https://script.google.com')) {
+                showToast('Masukkan URL Web App Google Apps Script terlebih dahulu!', 'warning');
+                return;
+            }
+            try {
+                showToast('Mengambil database terbaru dari Google Drive...', 'info');
+                const res = await fetch(url, { method: 'GET' });
+                const cloudDb = await res.json();
+                if (cloudDb && cloudDb.settings && cloudDb.books && cloudDb.students) {
+                    cloudDb.settings.gdriveWebhook = url;
+                    cloudDb.settings.lastSync = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
+                    db = cloudDb;
+                    saveDatabase(true);
+                    updateSyncBadgeStatus('Google Drive Cloud Aktif', true);
+                    showToast('Database berhasil dimuat dari Google Drive!', 'success');
+                } else {
+                    showToast('Belum ada file database di Google Drive. Klik "Kirim ke Drive" terlebih dahulu.', 'warning');
+                }
+            } catch (err) {
+                showToast('Gagal memuat dari Google Drive. Pastikan akses Web App disetel ke "Siapa saja" (Anyone).', 'error');
+            }
+        }
+
+        function exportRekapCSV() {
+            let csv = 'ID,NISN,Nama Siswa,Kelas,Judul Buku,Tanggal Pinjam,Jatuh Tempo,Tanggal Kembali,Status\n';
+            db.loans.forEach(l => {
+                csv += `"${l.id}","${l.nisn}","${l.studentName}","${l.kelas}","${l.bookTitle}","${l.borrowDate}","${l.dueDate}","${l.returnDate}","${l.status}"\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'Rekap_Peminjaman_Perpus_Sumber_Ilmu_SDN1_Rejoso.csv');
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            showToast('Rekap Peminjaman & Pengembalian (.CSV) berhasil diunduh!', 'success');
+        }
+
+        function refreshAllViews() {
+            renderHeaderAndBranding();
+            renderPublicDashboard();
+            refreshStudentDashboard();
+            refreshAdminDashboard();
+        }
+
+        window.onload = function () {
+            restoreActiveSession();
+            refreshAllViews();
+            initHostingDatabaseSync();
+
+            // Registrasi Service Worker PWA agar bisa di-install di HP/Laptop saat di-hosting
+            if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+                navigator.serviceWorker.register('./sw.js').catch(() => {});
+            }
+        };
+    </script>
+</body>
+</html>

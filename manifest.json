@@ -1,0 +1,21 @@
+{
+  "name": "Perpustakaan Digital Sumber Ilmu - SD Negeri 1 Rejoso",
+  "short_name": "Sumber Ilmu",
+  "description": "Aplikasi Perpustakaan Digital Sumber Ilmu SD Negeri 1 Rejoso. Pinjam buku, baca E-Book interaktif, unggah karya siswa, dan tulis cerpen.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b1120",
+  "theme_color": "#1e3a8a",
+  "orientation": "any",
+  "lang": "id-ID",
+  "icons": [
+    {
+      "src": "./favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
+

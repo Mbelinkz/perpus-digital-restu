@@ -1,0 +1,179 @@
+{
+  "settings": {
+    "libraryName": "Perpustakaan Sumber Ilmu",
+    "schoolName": "SD Negeri 1 Rejoso",
+    "address": "Jl. Raya Rejoso No. 12, Kec. Rejoso, Kab. Nganjuk",
+    "headLibrarian": "Dra. Hj. Sulastri, M.Pd.",
+    "adminUser": "admin",
+    "adminPass": "admin123",
+    "logoDataUrl": "",
+    "gdriveWebhook": "",
+    "lastSync": "Tersinkron Server"
+  },
+  "students": [
+    { "nisn": "0123456789", "name": "Budi Santoso", "kelas": "Kelas 4", "address": "Ds. Rejoso, Kec. Rejoso" },
+    { "nisn": "0123456790", "name": "Siti Aminah", "kelas": "Kelas 5", "address": "Ds. Klagen, Kec. Rejoso" },
+    { "nisn": "0123456791", "name": "Ahmad Rizky Pratama", "kelas": "Kelas 6", "address": "Ds. Banjarejo, Kec. Rejoso" },
+    { "nisn": "0123456792", "name": "Nabila Putri Zahra", "kelas": "Kelas 3", "address": "Ds. Rejoso, Kec. Rejoso" },
+    { "nisn": "0123456793", "name": "Dimas Aditya", "kelas": "Kelas 5", "address": "Ds. Talun, Kec. Rejoso" }
+  ],
+  "books": [
+    {
+      "id": "BK-001",
+      "title": "Kisah Nusantara & Legenda Gunung Wilis",
+      "author": "Balai Pustaka Anak",
+      "category": "Dongeng & Cerita Rakyat",
+      "type": "both",
+      "stock": 8,
+      "coverColor": "from-amber-500 to-orange-600",
+      "icon": "fa-dragon",
+      "pages": [
+        "Halaman 1: Di kaki pegunungan yang hijau dan sejuk, hiduplah masyarakat desa yang rukun dan gemar bergotong royong. Anak-anak selalu berkumpul di taman bacaan setiap sore.",
+        "Halaman 2: Suatu hari, Kakek Wira menceritakan legenda tentang mata air ilmu yang tak pernah kering selama anak-anak terus rajin membaca dan menghormati guru serta orang tua.",
+        "Halaman 3: Pesan Moral: Siapa yang tekun menuntut ilmu sejak kecil, kelak akan menjadi lentera bagi desa dan bangsanya."
+      ]
+    },
+    {
+      "id": "BK-002",
+      "title": "Sains Seru: Eksperimen Air & Cahaya",
+      "author": "Dr. Hendra Wijaya",
+      "category": "Sains & Eksperimen",
+      "type": "both",
+      "stock": 6,
+      "coverColor": "from-sky-500 to-blue-700",
+      "icon": "fa-flask",
+      "pages": [
+        "Halaman 1: Mengapa Pelangi Memiliki Tujuh Warna? Saat cahaya matahari melewati tetesan air hujan, cahaya tersebut dibiaskan dan diuraikan menjadi spektrum warna yang indah!",
+        "Halaman 2: Percobaan Sederhana di Rumah: Siapkan segelas air bening, cermin kecil, dan senter. Arahkan cahaya senter ke cermin di dalam air dan lihat pelangi di dindingmu!",
+        "Halaman 3: Sains membuat kita memahami betapa menakjubkannya alam ciptaan Tuhan di sekitar kita."
+      ]
+    },
+    {
+      "id": "BK-003",
+      "title": "Anak Hebat Cinta Pancasila",
+      "author": "Kemendikbudristek",
+      "category": "Pendidikan & Pancasila",
+      "type": "both",
+      "stock": 12,
+      "coverColor": "from-rose-500 to-red-700",
+      "icon": "fa-shield-heart",
+      "pages": [
+        "Halaman 1: Pelajar Pancasila adalah pelajar sepanjang hayat yang memiliki kompetensi global dan berperilaku sesuai nilai-nilai Pancasila.",
+        "Halaman 2: Enam Profil Pelajar Pancasila: Beriman & Bertakwa, Berkebinekaan Global, Bergotong Royong, Mandiri, Bernalar Kritis, dan Kreatif."
+      ]
+    },
+    {
+      "id": "BK-004",
+      "title": "Matematika Ceria: Petualangan Angka",
+      "author": "Rina Kusuma, S.Pd.",
+      "category": "Matematika & Logika",
+      "type": "both",
+      "stock": 9,
+      "coverColor": "from-emerald-500 to-teal-700",
+      "icon": "fa-calculator",
+      "pages": [
+        "Halaman 1: Berhitung itu sangat menyenangkan! Bayangkan kamu memiliki 12 buah apel dan ingin membagikannya secara adil kepada 4 orang sahabatmu.",
+        "Halaman 2: Setiap sahabatmu akan mendapatkan 3 buah apel segar (12 : 4 = 3). Matematika mengajarkan kita keadilan dan ketelitian!"
+      ]
+    },
+    {
+      "id": "BK-005",
+      "title": "Ensiklopedia Flora & Fauna Indonesia",
+      "author": "Tim Sains Nusantara",
+      "category": "Ensiklopedia Anak",
+      "type": "both",
+      "stock": 5,
+      "coverColor": "from-purple-500 to-indigo-700",
+      "icon": "fa-leaf",
+      "pages": [
+        "Halaman 1: Indonesia merupakan salah satu negara dengan keanekaragaman hayati terbesar di dunia. Dari Komodo di Nusa Tenggara hingga Bunga Rafflesia di Sumatera.",
+        "Halaman 2: Mari kita jaga kelestarian pohon dan hewan di lingkungan sekolah kita agar bumi tetap sejuk dan asri."
+      ]
+    }
+  ],
+  "loans": [
+    {
+      "id": "PJ-101",
+      "nisn": "0123456789",
+      "studentName": "Budi Santoso",
+      "kelas": "Kelas 4",
+      "bookId": "BK-001",
+      "bookTitle": "Kisah Nusantara & Legenda Gunung Wilis",
+      "borrowDate": "2026-11-02",
+      "dueDate": "2026-11-09",
+      "returnDate": "-",
+      "status": "Dipinjam"
+    },
+    {
+      "id": "PJ-102",
+      "nisn": "0123456790",
+      "studentName": "Siti Aminah",
+      "kelas": "Kelas 5",
+      "bookId": "BK-002",
+      "bookTitle": "Sains Seru: Eksperimen Air & Cahaya",
+      "borrowDate": "2026-10-25",
+      "dueDate": "2026-11-01",
+      "returnDate": "2026-10-30",
+      "status": "Dikembalikan"
+    }
+  ],
+  "visits": [
+    { "id": "KJ-1", "timestamp": "06 Nov 2026, 07:35", "nisn": "0123456789", "name": "Budi Santoso", "kelas": "Kelas 4", "purpose": "Login Portal Siswa & Baca E-Book" },
+    { "id": "KJ-2", "timestamp": "06 Nov 2026, 08:10", "nisn": "0123456790", "name": "Siti Aminah", "kelas": "Kelas 5", "purpose": "Menulis Cerpen Siswa" },
+    { "id": "KJ-3", "timestamp": "05 Nov 2026, 09:15", "nisn": "0123456791", "name": "Ahmad Rizky Pratama", "kelas": "Kelas 6", "purpose": "Meminjam Buku Ensiklopedia" }
+  ],
+  "works": [
+    {
+      "id": "KR-1",
+      "nisn": "0123456792",
+      "studentName": "Nabila Putri Zahra",
+      "kelas": "Kelas 3",
+      "title": "Puisi: Taman Ilmu di Sekolahku",
+      "category": "Puisi & Pantun",
+      "description": "Di sudut sekolah yang teduh dan rapi,\nBerjajar buku penuh warna-warni,\nSumber Ilmu tempatku merajut mimpi,\nMenjadi anak cerdas kebanggaan negeri.",
+      "imageUrl": "",
+      "date": "04 Nov 2026"
+    },
+    {
+      "id": "KR-2",
+      "nisn": "0123456789",
+      "studentName": "Budi Santoso",
+      "kelas": "Kelas 4",
+      "title": "Miniatur Kincir Angin Hemat Energi",
+      "category": "Prakarya Kreatif",
+      "description": "Prakarya kincir angin dari stik es krim bekas dan dinamo kecil setelah membaca buku Sains Seru di Perpustakaan Sumber Ilmu.",
+      "imageUrl": "",
+      "date": "05 Nov 2026"
+    }
+  ],
+  "stories": [
+    {
+      "id": "CP-1",
+      "nisn": "0123456790",
+      "studentName": "Siti Aminah",
+      "kelas": "Kelas 5",
+      "title": "Lentera Kecil di Desa Rejoso",
+      "theme": "Persahabatan & Budi Pekerti",
+      "content": "Setiap pulang sekolah, Rara dan Dika selalu mampir ke Perpustakaan Sumber Ilmu SD Negeri 1 Rejoso. Mereka senang membaca buku cerita rakyat dan berbagi cerita kepada adik-adik kelas 1 yang baru belajar mengeja.\n\nSuatu sore, hujan turun dengan deras. Rara menemukan sebuah buku tua yang mengajarkan cara membuat pupuk kompos dari daun kering di halaman sekolah. Bersama teman-temannya, mereka mempraktikkan ilmu dari buku itu hingga taman sekolah menjadi sangat subur dan memenangkan lomba sekolah adiwiyata.",
+      "likes": 18,
+      "date": "03 Nov 2026"
+    },
+    {
+      "id": "CP-2",
+      "nisn": "0123456791",
+      "studentName": "Ahmad Rizky Pratama",
+      "kelas": "Kelas 6",
+      "title": "Mimbar Cita-Cita Sang Peneliti Muda",
+      "theme": "Cita-citaku",
+      "content": "Sejak duduk di bangku kelas empat, aku selalu penasaran bagaimana pesawat bisa terbang tinggi di angkasa. Ibu Pustakawan di Perpustakaan Sumber Ilmu memberiku buku tentang B.J. Habibie.\n\nAku membacanya dengan penuh semangat. Dari buku itulah aku berjanji untuk rajin belajar matematika dan sains agar kelak bisa mengharumkan nama SD Negeri 1 Rejoso.",
+      "likes": 24,
+      "date": "05 Nov 2026"
+    }
+  ],
+  "monthlyProgress": {
+    "labels": ["Jun", "Jul", "Agu", "Sep", "Okt", "Nov"],
+    "visits": [42, 65, 88, 104, 128, 152],
+    "loans": [25, 38, 54, 67, 82, 96]
+  }
+}
+
